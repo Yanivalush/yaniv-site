@@ -18,7 +18,7 @@
 :root{
   --ink:#10201f; --muted:#5b6b6a; --bg:#f4f1ea; --card:#ffffff; --line:#e3ded2;
   --teal:#13877f; --teal-d:#0f2a2e; --teal-l:#d7efec; --plum:#6b2d6b; --amber:#e8a33d; --red:#c2413b;
-  --official:#13877f; --private:#6b2d6b; --pending:#e8a33d; --rose:#d6457a;
+  --official:#13877f; --private:#6b2d6b; --pending:#e8a33d; --rose:#d6457a; --blue:#2f6fb5;
   --radius:18px; --shadow:0 10px 30px -12px rgba(15,42,46,.35);
 }
 @media (prefers-color-scheme: dark){
@@ -131,9 +131,11 @@ h2{font-family:"Secular One",Rubik,sans-serif;font-size:clamp(26px,4.4vw,36px);m
 .ev h4{margin:0;font-size:16px}
 .ev p{margin:0;color:var(--muted);font-size:13px}
 .pill{display:inline-block;font-size:11px;padding:1px 8px;border-radius:999px;background:var(--teal-l);color:var(--ink);margin-inline-start:6px;vertical-align:1px}
-.filters{display:flex;gap:6px;margin-bottom:10px}
-.chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:14px}
-.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.list-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.list-head h3{margin:0;font-size:18px}
+.filters{display:inline-grid;grid-template-columns:1fr 1fr;padding:3px;border-radius:999px;background:color-mix(in srgb,var(--blue) 12%,var(--bg));border:1px solid color-mix(in srgb,var(--blue) 30%,transparent)}
+.chip{border:0;background:transparent;color:var(--blue);border-radius:999px;padding:7px 14px;cursor:pointer;font-size:14px;font-weight:500;min-height:36px}
+.chip[aria-pressed="true"]{background:var(--blue);color:#fff;box-shadow:0 2px 8px -2px color-mix(in srgb,var(--blue) 60%,transparent)}
 
 /* ---------- FORM ---------- */
 form .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -273,9 +275,12 @@ dialog h3{margin:0 0 4px;font-size:22px}
         </div>
       </div>
       <div class="card">
-        <div class="filters">
-          <button class="chip" data-f="up" aria-pressed="true">קרובים</button>
-          <button class="chip" data-f="past" aria-pressed="false">היו כבר</button>
+        <div class="list-head">
+          <h3>רשימת אירועים</h3>
+          <div class="filters" role="group" aria-label="איזה אירועים להציג">
+            <button class="chip" data-f="up" aria-pressed="true">קרובים</button>
+            <button class="chip" data-f="past" aria-pressed="false">היו כבר</button>
+          </div>
         </div>
         <div class="list" id="list"></div>
       </div>

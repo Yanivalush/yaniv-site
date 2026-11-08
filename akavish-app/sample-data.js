@@ -246,20 +246,6 @@ window.SAMPLE_EVENTS = [
   "status": "יעד"
  },
  {
-  "date": "2026-11-21",
-  "family": "מירב שריקי",
-  "type": "",
-  "location": "",
-  "status": "יעד"
- },
- {
-  "date": "2026-11-26",
-  "family": "הדר אזרד",
-  "type": "עליה לתורה",
-  "location": "",
-  "status": "יעד"
- },
- {
   "date": "2026-12-03",
   "family": "פחימה",
   "type": "בת מצוה",
