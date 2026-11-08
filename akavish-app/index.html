@@ -393,8 +393,8 @@ dialog h3{margin:0 0 4px;font-size:22px}
 <dialog id="dlg"><div class="in" id="dlgBody"></div><div class="in" style="padding-top:0"><button class="btn btn-outline" onclick="dlg.close()">סגירה</button></div></dialog>
 <div class="toast" id="toast"></div>
 
-<script src="config.js"></script>
-<script src="sample-data.js"></script>
+<script src="config.js?v=3"></script>
+<script src="sample-data.js?v=3"></script>
 <script>
 (() => {
 "use strict";
@@ -714,7 +714,7 @@ let deferred;
 window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferred = e; $("#install").style.display = "inline-flex"; });
 $("#install").onclick = async () => { if (!deferred) return; deferred.prompt(); await deferred.userChoice; deferred = null; $("#install").style.display = "none"; };
 if ("serviceWorker" in navigator && location.protocol === "https:") {
-  navigator.serviceWorker.register("sw.js").catch(() => {});
+  navigator.serviceWorker.register("sw.js", { updateViaCache: "none" }).catch(() => {});
 }
 })();
 </script>
