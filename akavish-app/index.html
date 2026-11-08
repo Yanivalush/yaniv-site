@@ -1,0 +1,706 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>צוות עכביש שוקדה</title>
+<meta name="description" content="שיבוץ ציוד לאירועים של צוות עכביש שוקדה: לוח תאריכים, שיבוץ, מחירון ותרומה">
+<meta name="theme-color" content="#0f2a2e">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="img/icon-192.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="עכביש">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;900&family=Secular+One&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#10201f; --muted:#5b6b6a; --bg:#f4f1ea; --card:#ffffff; --line:#e3ded2;
+  --teal:#13877f; --teal-d:#0f2a2e; --teal-l:#d7efec; --plum:#6b2d6b; --amber:#e8a33d; --red:#c2413b;
+  --official:#13877f; --private:#6b2d6b; --pending:#e8a33d;
+  --radius:18px; --shadow:0 10px 30px -12px rgba(15,42,46,.35);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ink:#eef4f3; --muted:#9db0ae; --bg:#0c1617; --card:#142224; --line:#24393b;
+    --teal-l:#163a38; --shadow:0 10px 30px -12px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{ --ink:#eef4f3; --muted:#9db0ae; --bg:#0c1617; --card:#142224; --line:#24393b; --teal-l:#163a38; }
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;overflow-x:clip}
+body{margin:0;font-family:Rubik,system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;-webkit-tap-highlight-color:transparent}
+img{max-width:100%;display:block}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+
+/* ---------- HERO ---------- */
+.hero{position:relative;min-height:min(92vh,760px);display:grid;place-items:center;text-align:center;color:#fff;overflow:hidden;isolation:isolate;padding:48px 16px 90px}
+.hero::before{content:"";position:absolute;inset:0;background:url(img/hero.jpg) center/cover;z-index:-2;transform:scale(1.05);animation:drift 30s ease-in-out infinite alternate}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse at 50% 35%,rgba(15,42,46,.55),rgba(10,22,24,.92) 70%),linear-gradient(180deg,transparent 60%,var(--bg))}
+@keyframes drift{to{transform:scale(1.15) translate(-2%,1%)}}
+.web{position:absolute;inset:0;z-index:-1;opacity:.22;pointer-events:none}
+.web path,.web line,.web circle{stroke:#fff;fill:none;stroke-width:1}
+.spider{position:relative;width:min(220px,48vw);margin:0 auto;transform-origin:52% -70vh;animation:descend 2.4s cubic-bezier(.22,1.35,.45,1) both,bob 5.5s 2.4s ease-in-out infinite}
+.spider::before{content:"";position:absolute;z-index:-1;bottom:56%;left:52.4%;width:2px;height:130vh;transform:translateX(-50%);background:linear-gradient(rgba(255,255,255,.15),rgba(255,255,255,.95) 50%);box-shadow:0 0 6px rgba(127,227,216,.6)}
+.spider img{width:100%;height:auto;filter:drop-shadow(0 22px 26px rgba(0,0,0,.65)) drop-shadow(0 0 22px rgba(127,227,216,.35))}
+@keyframes descend{from{transform:translateY(-120vh)}}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(14px) rotate(.8deg)}70%{transform:translateY(-6px) rotate(-.8deg)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+.hero h1{font-family:"Secular One",Rubik,sans-serif;font-size:clamp(34px,7vw,64px);line-height:1.05;margin:30px 0 8px;text-shadow:0 4px 24px rgba(0,0,0,.5)}
+.hero h1 span{color:#7fe3d8}
+.hero p.lead{text-wrap:balance;font-size:clamp(16px,2.6vw,20px);max-width:600px;margin:0 auto 22px;opacity:.92}
+.cta{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.ask{font-family:"Secular One",Rubik,sans-serif;font-size:clamp(18px,3vw,22px);margin:0 0 12px;color:#7fe3d8}
+.actions{display:grid;grid-template-columns:repeat(4,1fr);max-width:640px;margin:0 auto;border-radius:20px;overflow:hidden;background:rgba(255,255,255,.12);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.28);box-shadow:0 20px 50px -20px #000}
+.actions a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:14px 6px;min-height:84px;color:#fff;text-decoration:none;font-weight:700;font-size:15px;line-height:1.2;transition:background .15s}
+.actions a+a{border-inline-start:1px solid rgba(255,255,255,.22)}
+.actions a:first-child{background:linear-gradient(135deg,#1fb3a6,var(--teal))}
+.actions a:hover{background:rgba(255,255,255,.2)}
+.actions a:first-child:hover{background:linear-gradient(135deg,#25c4b6,#16968d)}
+.actions svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+@media (max-width:560px){.actions{grid-template-columns:1fr 1fr}.actions a:nth-child(3){border-inline-start:0}.actions a:nth-child(n+3){border-top:1px solid rgba(255,255,255,.22)}}
+.btn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:999px;padding:13px 22px;font-weight:700;cursor:pointer;text-decoration:none;transition:transform .15s,box-shadow .15s;min-height:48px}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:linear-gradient(135deg,#1fb3a6,var(--teal));color:#fff;box-shadow:0 10px 24px -8px #13877fcc}
+.btn-ghost{background:rgba(255,255,255,.14);color:#fff;backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.3)}
+.btn-plum{background:linear-gradient(135deg,#9b3d9b,var(--plum));color:#fff}
+.btn-outline{background:transparent;border:2px solid var(--teal);color:var(--teal)}
+.btn svg{width:20px;height:20px}
+
+/* ---------- NAV ---------- */
+nav.tabs{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav.tabs .wrap{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-top:8px;padding-bottom:8px;align-items:center}
+nav.tabs a{flex:none;padding:8px 14px;border-radius:999px;text-decoration:none;font-weight:500;color:var(--muted);font-size:15px}
+nav.tabs a:hover{background:var(--teal-l);color:var(--ink)}
+nav.tabs .mini{width:34px;height:34px;border-radius:50%;background:#fff;padding:3px;flex:none;margin-inline-end:6px}
+
+section{padding:46px 0 10px}
+h2{font-family:"Secular One",Rubik,sans-serif;font-size:clamp(26px,4.4vw,36px);margin:0 0 6px;line-height:1.15}
+.sub{color:var(--muted);margin:0 0 22px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+
+/* ---------- STATUS STRIP ---------- */
+.strip{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;text-align:center;box-shadow:var(--shadow)}
+.stat b{display:block;font-size:28px;font-family:"Secular One",Rubik;color:var(--teal)}
+.stat span{font-size:13px;color:var(--muted)}
+.demo{margin:14px 0 0;padding:10px 14px;border-radius:12px;background:#fff4dc;color:#6b4a0c;font-size:14px;border:1px solid #f1d79b}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .demo{background:#3a2e12;color:#f6dfa8;border-color:#5c4a1c}}
+
+/* ---------- CALENDAR ---------- */
+.cal-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.cal-head h3{margin:0;font-size:20px;text-align:center;flex:1}
+.cal-head small{display:block;color:var(--muted);font-weight:400;font-size:13px}
+.icon-btn{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--card);cursor:pointer;display:grid;place-items:center;font-size:20px}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.dow{text-align:center;font-size:12px;color:var(--muted);padding:4px 0;font-weight:500}
+.day{position:relative;aspect-ratio:1/1.05;border-radius:12px;border:1px solid transparent;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:5px 2px;cursor:pointer;font-size:15px;min-width:0;overflow:hidden}
+.day .hd{font-size:10px;color:var(--muted);line-height:1.1}
+.day .tag{margin-top:auto;font-size:10px;line-height:1.15;max-width:100%;padding:1px 4px;border-radius:6px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.day.out{opacity:.3;pointer-events:none}
+.day.past{opacity:.55}
+.day.today{border-color:var(--teal);font-weight:700}
+.day.taken{background:var(--teal-l)}
+.day.taken .tag{background:var(--official)}
+.day.taken.priv .tag{background:var(--private)}
+.day.taken.pend .tag{background:var(--pending);color:#3a2700}
+.day.adj{background:repeating-linear-gradient(-45deg,var(--bg) 0 6px,color-mix(in srgb,var(--line) 70%,transparent) 6px 8px)}
+.day.free:hover{border-color:var(--teal)}
+.day.sel{outline:3px solid var(--teal);outline-offset:1px}
+.day.shab .num{color:var(--plum)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--muted);margin-top:12px}
+.legend i{display:inline-block;width:14px;height:14px;border-radius:4px;vertical-align:-2px;margin-inline-end:5px}
+@media (max-width:520px){.day .tag{font-size:0;height:5px;width:70%;padding:0}.day{font-size:13px;border-radius:9px}.day .hd{font-size:9px}}
+
+.cols{display:grid;grid-template-columns:1.35fr 1fr;gap:18px}
+@media (max-width:860px){.cols{grid-template-columns:1fr}}
+.list{display:flex;flex-direction:column;gap:8px;max-height:560px;overflow:auto;padding-inline-end:4px}
+.ev{display:grid;grid-template-columns:58px 1fr;gap:12px;align-items:center;padding:10px;border-radius:14px;background:var(--bg);border:1px solid var(--line)}
+.ev .d{text-align:center;border-radius:12px;padding:6px 0;background:var(--teal);color:#fff;line-height:1.1}
+.ev.priv .d{background:var(--private)}
+.ev.pend .d{background:var(--pending);color:#3a2700}
+.ev .d b{display:block;font-size:22px}
+.ev .d small{font-size:11px}
+.ev h4{margin:0;font-size:16px}
+.ev p{margin:0;color:var(--muted);font-size:13px}
+.pill{display:inline-block;font-size:11px;padding:1px 8px;border-radius:999px;background:var(--teal-l);color:var(--ink);margin-inline-start:6px;vertical-align:1px}
+.filters{display:flex;gap:6px;margin-bottom:10px}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:14px}
+.chip[aria-pressed="true"]{background:var(--teal);color:#fff;border-color:var(--teal)}
+
+/* ---------- FORM ---------- */
+form .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:600px){form .row{grid-template-columns:1fr}}
+label{display:block;font-weight:500;font-size:14px;margin:12px 0 5px}
+input,select,textarea{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;background:var(--bg);min-height:48px;font-size:16px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 4px color-mix(in srgb,var(--teal) 20%,transparent)}
+.kind{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+.kind label{position:relative;margin:0;cursor:pointer;border:2px solid var(--line);border-radius:16px;padding:14px;background:var(--bg);font-weight:400}
+.kind input{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;min-height:0;inset:0}
+.kind label:has(input:checked){border-color:var(--teal);background:var(--teal-l)}
+.kind label.p:has(input:checked){border-color:var(--plum);background:color-mix(in srgb,var(--plum) 14%,var(--bg))}
+.kind b{display:block;font-size:17px}
+.kind small{color:var(--muted)}
+.msg{padding:12px 14px;border-radius:12px;margin-top:10px;font-size:14px;display:none}
+.msg.show{display:block}
+.msg.err{background:#fde8e6;color:#7a1d17;border:1px solid #f3c1bc}
+.msg.warn{background:#fff4dc;color:#6b4a0c;border:1px solid #f1d79b}
+.msg.ok{background:var(--teal-l);color:var(--ink);border:1px solid color-mix(in srgb,var(--teal) 40%,transparent)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .msg.err{background:#3d1714;color:#ffc9c3;border-color:#6b2a24}:root:not([data-theme="light"]) .msg.warn{background:#3a2e12;color:#f6dfa8;border-color:#5c4a1c}}
+.equip{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+.eq{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:12px;background:var(--bg)}
+.eq .n{flex:1;font-size:14px;line-height:1.25}
+.eq .n small{display:block;color:var(--muted);font-size:12px}
+#equip.free .pr{display:none}
+.stepper{display:flex;align-items:center;gap:4px}
+.stepper button{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--card);cursor:pointer;font-size:18px;line-height:1}
+.stepper input{width:46px;min-height:34px;padding:4px;text-align:center;border-radius:8px}
+.total{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding:14px 16px;border-radius:14px;background:var(--teal-d);color:#fff;font-size:18px}
+.total b{font-size:24px;font-family:"Secular One",Rubik}
+.mazal{margin-top:12px;padding:16px 18px;border-radius:16px;background:linear-gradient(135deg,color-mix(in srgb,var(--teal) 16%,var(--card)),color-mix(in srgb,var(--plum) 12%,var(--card)));border:1px solid color-mix(in srgb,var(--teal) 35%,transparent)}
+.mazal h4{margin:0 0 6px;font-family:"Secular One",Rubik,sans-serif;font-size:20px;color:var(--teal)}
+.mazal p{margin:0 0 8px;font-size:15px}
+.mazal ul{margin:0;padding:0 18px 0 0;display:grid;gap:6px;font-size:14.5px}
+.waiver{margin-top:18px;border:2px dashed var(--line);border-radius:16px;padding:16px;background:var(--bg)}
+.waiver h3{margin:0 0 6px;font-size:18px}
+.waiver p{margin:0 0 10px;font-size:14px}
+.sigbox{position:relative;border:1.5px solid var(--line);border-radius:12px;background:#fff;touch-action:none;height:170px}
+.sigbox canvas{width:100%;height:100%;display:block;border-radius:12px;cursor:crosshair}
+.sigbox .ph{position:absolute;inset:auto 0 46%;text-align:center;color:#9aa;pointer-events:none;font-size:15px}
+.sigbox .base{pointer-events:none;position:absolute;left:18px;right:18px;bottom:34px;border-top:1px solid #ccd}
+.sigbox button{position:absolute;top:8px;left:8px;border:0;background:#eef;color:#334;border-radius:8px;padding:4px 10px;cursor:pointer;font-size:13px}
+.check{display:flex;gap:10px;align-items:flex-start;font-weight:400;margin-top:12px;cursor:pointer}
+.check input{width:22px;height:22px;min-height:0;flex:none;margin-top:2px;accent-color:var(--teal)}
+
+/* ---------- PRICES / RULES ---------- */
+table.prices{width:100%;border-collapse:collapse;font-size:15px}
+table.prices td,table.prices th{padding:10px 8px;border-bottom:1px solid var(--line);text-align:right}
+table.prices th{font-size:13px;color:var(--muted);font-weight:500}
+table.prices td.p{font-weight:700;white-space:nowrap;color:var(--teal)}
+table.prices small{color:var(--muted)}
+.rules{display:grid;gap:10px;counter-reset:r}
+.rules li{list-style:none;padding:12px 14px;border-radius:14px;background:var(--bg);border:1px solid var(--line);font-size:15px}
+.rules{padding:0;margin:0}
+
+/* ---------- SUPPORT ---------- */
+.support{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:700px){.support{grid-template-columns:1fr}}
+.tile{position:relative;border-radius:22px;overflow:hidden;min-height:260px;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;padding:22px;isolation:isolate;text-decoration:none}
+.tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}
+.tile::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,transparent 20%,rgba(10,22,24,.92))}
+.tile h3{margin:0 0 4px;font-size:24px;font-family:"Secular One",Rubik}
+.tile p{margin:0 0 14px;opacity:.9}
+.tile .btn{align-self:flex-start}
+footer{padding:40px 16px 60px;text-align:center;color:var(--muted);font-size:14px}
+footer img{width:70px;margin:0 auto 8px;background:#fff;border-radius:50%;padding:8px}
+
+/* ---------- DIALOG / TOAST ---------- */
+dialog{border:0;border-radius:22px;padding:0;max-width:min(440px,92vw);width:100%;background:var(--card);color:var(--ink);box-shadow:0 30px 80px -20px #000}
+dialog::backdrop{background:rgba(5,12,13,.6);backdrop-filter:blur(3px)}
+dialog .in{padding:22px}
+dialog h3{margin:0 0 4px;font-size:22px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(150%);background:var(--teal-d);color:#fff;padding:12px 18px;border-radius:14px;z-index:50;transition:transform .3s,visibility .3s;max-width:92vw;box-shadow:var(--shadow);visibility:hidden}
+.toast.show{transform:translateX(-50%) translateY(0);visibility:visible}
+#install{display:none}
+.spinner{display:inline-block;width:18px;height:18px;border:2px solid #fff6;border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <svg class="web" viewBox="0 0 1000 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true" id="websvg"></svg>
+  <div>
+    <div class="spider"><img src="img/spider-white.png" alt="העכביש של צוות עכביש" width="274" height="462"></div>
+    <h1>צוות <span>עכביש</span> שוקדה</h1>
+    <p class="lead">מיזם ערבות הדדית של מושב שוקדה: מתנדבים מהקהילה שנרתמים להקים ולקפל אירועי שמחה, עם ציוד איכותי ומיוחד שכל משפחה במושב יכולה לקבל.</p>
+    <p class="ask">מה תרצה/י לעשות?</p>
+    <nav class="actions" aria-label="פעולות">
+      <a href="#book"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M12 13v5M9.5 15.5h5"/></svg>להשתבץ לאירוע</a>
+      <a href="#calendar"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>מה תפוס?</a>
+      <a href="#" id="heroDonate" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>לתרום למיזם</a>
+      <a href="#" id="heroPhotos" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>להעלות תמונות</a>
+    </nav>
+    <div class="cta" style="margin-top:14px"><button class="btn btn-ghost" id="install" type="button">התקנה לטלפון</button></div>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="ניווט">
+  <div class="wrap">
+    <img class="mini" src="img/logo.png" alt="">
+    <a href="#calendar">לוח אירועים</a>
+    <a href="#book">שיבוץ</a>
+    <a href="#prices">מחירון</a>
+    <a href="#rules">תקנון</a>
+    <a href="#support">תרומה ותמונות</a>
+  </div>
+</nav>
+
+<main class="wrap">
+  <div class="strip">
+    <div class="stat"><b id="sUpcoming">–</b><span>אירועים קרובים</span></div>
+    <div class="stat"><b id="sSeason">–</b><span>אירועים העונה</span></div>
+    <div class="stat"><b id="sNext">–</b><span>הקרוב ביותר</span></div>
+  </div>
+  <div class="demo" id="demoNote" hidden>מצב הדגמה: הנתונים מוצגים מתוך טבלת העונה, ושיבוצים נשמרים רק במכשיר הזה עד שהאתר יחובר לגוגל שיטס.</div>
+
+  <!-- ============ CALENDAR ============ -->
+  <section id="calendar">
+    <h2>לוח אירועים</h2>
+    <p class="sub">כל התאריכים שכבר תפוסים: מי חוגג ואיפה במושב. אי אפשר להשתבץ יום אחרי יום, אלא באישור מנהל.</p>
+    <div class="cols">
+      <div class="card">
+        <div class="cal-head">
+          <button class="icon-btn" id="prev" aria-label="חודש קודם">›</button>
+          <h3 id="monthTitle"></h3>
+          <button class="icon-btn" id="next" aria-label="חודש הבא">‹</button>
+        </div>
+        <div class="grid" id="dow"></div>
+        <div class="grid" id="days"></div>
+        <div class="legend">
+          <span><i style="background:var(--official)"></i>אירוע רשמי</span>
+          <span><i style="background:var(--private)"></i>אירוע פרטי</span>
+          <span><i style="background:var(--pending)"></i>ממתין לאישור</span>
+          <span><i style="background:repeating-linear-gradient(-45deg,var(--bg) 0 3px,var(--muted) 3px 4px)"></i>צמוד לאירוע (בקשה מיוחדת)</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="filters">
+          <button class="chip" data-f="up" aria-pressed="true">קרובים</button>
+          <button class="chip" data-f="past" aria-pressed="false">היו כבר</button>
+        </div>
+        <div class="list" id="list"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BOOKING ============ -->
+  <section id="book">
+    <h2>שיבוץ לאירוע</h2>
+    <p class="sub">אירוע רשמי לפי סעיף 4 בתקנון הוא ללא עלות (אפשר לתרום למיזם). אירוע פרטי בתשלום לפי המחירון.</p>
+    <form class="card" id="form" novalidate>
+      <label>סוג האירוע</label>
+      <div class="kind">
+        <label><input type="radio" name="kind" value="official" checked><b>אירוע רשמי</b><small>בר/בת מצווה, שבת חתן, חתונה, אירוסין, ברית, בריתה, חאלקה. ללא עלות</small></label>
+        <label class="p"><input type="radio" name="kind" value="private"><b>אירוע פרטי</b><small>יום הולדת, סעודת הודיה ועוד. לפי המחירון</small></label>
+      </div>
+      <div class="row">
+        <div><label for="type">מה חוגגים?</label><select id="type" name="type" required></select></div>
+        <div><label for="date">תאריך</label><input type="date" id="date" name="date" required><small id="hebDate" style="color:var(--muted);font-size:13px"></small></div>
+      </div>
+      <div class="row">
+        <div><label for="family">שם המשפחה</label><input id="family" name="family" required autocomplete="family-name" placeholder="למשל: משפחת כהן"></div>
+        <div><label for="phone">טלפון</label><input id="phone" name="phone" type="tel" required autocomplete="tel" inputmode="tel" placeholder="050-0000000"></div>
+      </div>
+      <label for="location">איפה במושב?</label>
+      <input id="location" name="location" required placeholder="בית / מועדון / משק 11 / פלק…">
+      <div class="msg" id="dateMsg"></div>
+      <div class="mazal" id="mazal" hidden></div>
+      <div id="specialWrap" hidden>
+        <label class="check"><input type="checkbox" id="special"> <span>אני מבקש/ת אישור מיוחד ממנהל המערכת לשיבוץ בתאריך הצמוד לאירוע אחר</span></label>
+        <label for="specialWhy">סיבת הבקשה</label>
+        <textarea id="specialWhy" rows="2" placeholder="למשל: שבת חתן שמתחילה ביום שישי"></textarea>
+      </div>
+
+      <label>איזה ציוד צריך?</label>
+      <div class="equip" id="equip"></div>
+      <div class="total"><span id="totalLabel">סה״כ לתשלום</span><b id="total">0 ₪</b></div>
+      <p id="donateHint" class="sub" style="margin:8px 0 0;font-size:14px">אירוע רשמי ללא עלות. אם תרצו, אפשר לתרום למיזם בפייבוקס ולעזור לנו לתקן ולקנות ציוד.</p>
+
+      <label for="notes">הערות</label>
+      <textarea id="notes" name="notes" rows="2" placeholder="שעת איסוף, עזרה בהקמה, כל דבר שחשוב לדעת"></textarea>
+
+      <div class="waiver">
+        <h3>כתב ויתור וחתימה דיגיטלית</h3>
+        <p id="waiverText"></p>
+        <div class="sigbox"><canvas id="sig" aria-label="משטח חתימה"></canvas><div class="base"></div><div class="ph" id="sigPh">חתמו כאן באצבע או בעכבר</div><button type="button" id="sigClear">ניקוי</button></div>
+        <div class="row">
+          <div><label for="signer">שם מלא של החותם/ת</label><input id="signer" required autocomplete="name"></div>
+          <div><label>תאריך חתימה</label><input id="signDate" disabled></div>
+        </div>
+        <label class="check"><input type="checkbox" id="agree" required> <span>קראתי ואני מסכים/ה לתקנון ולכתב הוויתור. החתימה שלי מחייבת.</span></label>
+      </div>
+
+      <div class="msg" id="formMsg"></div>
+      <div class="cta" style="justify-content:flex-start;margin-top:18px">
+        <button class="btn btn-primary" type="submit" id="submitBtn">שליחת שיבוץ</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- ============ PRICES ============ -->
+  <section id="prices">
+    <h2>מחירון ציוד עכביש</h2>
+    <p class="sub">לאירועים פרטיים (סעיף 5). המחירים בשקלים.</p>
+    <div class="card"><table class="prices" id="priceTable"><thead><tr><th>ציוד</th><th>מחיר</th><th>תנאים</th></tr></thead><tbody></tbody></table></div>
+  </section>
+
+  <!-- ============ RULES ============ -->
+  <section id="rules">
+    <h2>התקנון בקצרה</h2>
+    <p class="sub">עיקרי הדברים. הנוסח המלא נמצא אצל הצוות.</p>
+    <ul class="rules">
+      <li><b>אירוע רשמי (סעיף 4):</b> חאלקה, בר/בת מצווה, ברית ובריתה, אירוסין, חתונה ושבתות חתן/כלה, ואירוע אבל ל״ע. ללא עלות.</li>
+      <li><b>אירוע פרטי (סעיף 5):</b> אירוע בבית שאינו רשמי, כמו יום הולדת, סעודת הודיה או אירוע של קרוב משפחה. השימוש בציוד לפי המחירון, ומשיכת הציוד והחזרתו באחריות המשתמש.</li>
+      <li><b>ציוד מיוחד (סעיף 6):</b> ציוד לוגיסטי שאינו להשכרה, כמו גנרטור, טרמוקה וכו׳, לפי שיקול יו״ר הגמ״ח בהתאם לסיכון ולמהות האירוע.</li>
+      <li><b>אירועים קהילתיים (סעיף 8):</b> מסע חנוכה, תהלוכת פורים, שמחת תורה, טקסים, טיול אבות ובנים, אירוע סוף קיץ ועוד. הציוד יועבר רק לחבר צוות עכביש אחראי.</li>
+      <li><b>שימוש קהילתי בלבד (סעיף 10):</b> פגם או אובדן מחייבים בקנס לפי שיקול יו״ר הגמ״ח, ולא יותר מעלות ציוד חדש.</li>
+      <li><b>תשלום (סעיף 11):</b> בפייבוקס של יו״ר הגמ״ח. הכסף משמש לתיקון ורכישת ציוד ולהצלחת המיזם.</li>
+      <li><b>אין שיבוץ יום אחרי יום:</b> תאריך צמוד לאירוע קיים דורש בקשה מיוחדת ואישור מנהל המערכת.</li>
+    </ul>
+  </section>
+
+  <!-- ============ SUPPORT ============ -->
+  <section id="support">
+    <h2>תרומה ותמונות</h2>
+    <p class="sub">הציוד קיים בזכות המתנדבים והתרומות שלכם.</p>
+    <div class="support">
+      <a class="tile" id="payboxTile" href="#" target="_blank" rel="noopener">
+        <img src="img/trailer.jpg" alt="עגלת הציוד של צוות עכביש" loading="lazy">
+        <h3>תרומה למיזם</h3>
+        <p>כל שקל הולך לתיקון ציוד וקניית ציוד חדש לקהילה.</p>
+        <span class="btn btn-plum">לתרומה בפייבוקס</span>
+      </a>
+      <a class="tile" id="photosTile" href="#" target="_blank" rel="noopener">
+        <img src="img/shirt.jpg" alt="חולצת צוות עכביש" loading="lazy">
+        <h3>שתפו תמונות מהאירוע</h3>
+        <p>שלחו לנו תמונות של השולחנות, התאורה והשמחה. נשמח לראות!</p>
+        <span class="btn btn-primary">להעלאת תמונות</span>
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <img src="img/logo.png" alt="">
+  <div>צוות עכביש שוקדה · מיזם התנדבותי של מושב שוקדה</div>
+  <div id="adminLink" style="margin-top:6px"></div>
+</footer>
+
+<dialog id="dlg"><div class="in" id="dlgBody"></div><div class="in" style="padding-top:0"><button class="btn btn-outline" onclick="dlg.close()">סגירה</button></div></dialog>
+<div class="toast" id="toast"></div>
+
+<script src="config.js"></script>
+<script src="sample-data.js"></script>
+<script>
+(() => {
+"use strict";
+const C = window.AKAVISH_CONFIG || {};
+const $ = s => document.querySelector(s);
+const DEMO = !C.API_URL;
+const DOW = ["א׳","ב׳","ג׳","ד׳","ה׳","ו׳","ש׳"];
+const DAYNAME = ["ראשון","שני","שלישי","רביעי","חמישי","שישי","שבת"];
+const MONTHS = ["ינואר","פברואר","מרץ","אפריל","מאי","יוני","יולי","אוגוסט","ספטמבר","אוקטובר","נובמבר","דצמבר"];
+const OFFICIAL_RX = /מצו|חתן|כלה|חתונ|אירוס|ברית|חאלק|חלאק|אבל/;
+let events = [];
+
+// ---------- helpers ----------
+const iso = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const parse = s => { const [y,m,d] = s.split("-").map(Number); return new Date(y, m-1, d); };
+const addDays = (s, n) => { const d = parse(s); d.setDate(d.getDate()+n); return iso(d); };
+const todayIso = iso(new Date());
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+// גימטריה: 11 -> י״א, 5787 -> תשפ״ז
+function gem(n) {
+  n = n % 1000; let out = "";
+  const H = [[400,"ת"],[300,"ש"],[200,"ר"],[100,"ק"],[90,"צ"],[80,"פ"],[70,"ע"],[60,"ס"],[50,"נ"],[40,"מ"],[30,"ל"],[20,"כ"],[10,"י"],[9,"ט"],[8,"ח"],[7,"ז"],[6,"ו"],[5,"ה"],[4,"ד"],[3,"ג"],[2,"ב"],[1,"א"]];
+  while (n >= 400) { out += "ת"; n -= 400; }
+  if (n === 15) out += "טו"; else if (n === 16) out += "טז";
+  else for (const [v,c] of H) while (n >= v) { out += c; n -= v; }
+  return out.length > 1 ? out.slice(0,-1) + "״" + out.slice(-1) : out + "׳";
+}
+function hebParts(s) {
+  try {
+    const parts = new Intl.DateTimeFormat("he-u-ca-hebrew", {day:"numeric", month:"long", year:"numeric"}).formatToParts(parse(s));
+    const g = t => (parts.find(p => p.type === t) || {}).value || "";
+    return { day: gem(parseInt(g("day"))), month: g("month"), year: gem(parseInt(g("year"))) };
+  } catch(e) { return null; }
+}
+const heb = (s, short) => { const p = hebParts(s); if (!p || !p.day) return ""; return short ? p.day : `${p.day} ${p.month} ${p.year}`; };
+const isOfficial = e => e.kind ? e.kind === "official" : OFFICIAL_RX.test(e.type || "");
+const isPending = e => /ממתין|בקשה/.test(e.status || "");
+const active = () => events.filter(e => !/בוטל|נדחה/.test(e.status || ""));
+const byDate = () => { const m = {}; active().forEach(e => (m[e.date] ||= []).push(e)); return m; };
+const toast = t => { const el = $("#toast"); el.textContent = t; el.classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove("show"), 3500); };
+
+// ---------- data ----------
+const LS_KEY = "akavish-events-cache", LS_LOCAL = "akavish-local-bookings";
+const lsGet = k => { try { return JSON.parse(localStorage.getItem(k)); } catch(e) { return null; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) {} };
+
+async function load() {
+  if (DEMO) {
+    $("#demoNote").hidden = false;
+    events = [...(window.SAMPLE_EVENTS || []), ...(lsGet(LS_LOCAL) || [])];
+  } else {
+    const cached = lsGet(LS_KEY);
+    if (cached) { events = cached; render(); }
+    try {
+      const r = await fetch(C.API_URL + "?action=list&t=" + Date.now());
+      const j = await r.json();
+      if (!j.ok) throw new Error(j.error || "שגיאה");
+      events = j.events; lsSet(LS_KEY, events);
+    } catch (e) {
+      if (!cached) toast("לא הצלחנו לטעון את הלוח. בדקו חיבור לאינטרנט.");
+      else toast("מוצג הלוח האחרון שנשמר (אין חיבור)");
+    }
+  }
+  render();
+}
+
+// ---------- conflict rules ----------
+function check(date) {
+  const m = byDate();
+  if (m[date]) return { level: "taken", events: m[date] };
+  const near = [...(m[addDays(date,-1)] || []), ...(m[addDays(date,1)] || [])];
+  if (near.length) return { level: "adjacent", events: near };
+  return { level: "free" };
+}
+
+// ---------- render calendar ----------
+let view = new Date(); view.setDate(1);
+function renderCal() {
+  const y = view.getFullYear(), mo = view.getMonth();
+  const first = new Date(y, mo, 1), last = new Date(y, mo+1, 0);
+  let hebRange = "";
+  try {
+    const a = hebParts(iso(first)), b = hebParts(iso(last));
+    [a,b].forEach(x => x.month = x.month.replace(/^ב(?=(תשרי|חשון|חשוון|כסלו|טבת|שבט|אדר|ניסן|אייר|סיון|סיוון|תמוז|אב|אלול))/, ""));
+    hebRange = a.month === b.month ? `${a.month} ${a.year}` : (a.year === b.year ? `${a.month} – ${b.month} ${b.year}` : `${a.month} ${a.year} – ${b.month} ${b.year}`);
+  } catch(e) {}
+  $("#monthTitle").innerHTML = `${MONTHS[mo]} ${y}<small>${esc(hebRange)}</small>`;
+  const m = byDate();
+  const sel = $("#date").value;
+  let html = "";
+  for (let i = 0; i < first.getDay(); i++) html += `<div class="day out"></div>`;
+  for (let d = 1; d <= last.getDate(); d++) {
+    const s = iso(new Date(y, mo, d)), list = m[s];
+    const cls = ["day"];
+    if (s < todayIso) cls.push("past");
+    if (s === todayIso) cls.push("today");
+    if (new Date(y,mo,d).getDay() === 6) cls.push("shab");
+    if (s === sel) cls.push("sel");
+    let tag = "";
+    if (list) {
+      cls.push("taken");
+      if (list.some(isPending)) cls.push("pend"); else if (!list.some(isOfficial)) cls.push("priv");
+      tag = `<span class="tag">${esc(list.map(e => e.family).join(" + "))}</span>`;
+    } else if (m[addDays(s,-1)] || m[addDays(s,1)]) cls.push("adj");
+    else cls.push("free");
+    html += `<button type="button" class="${cls.join(" ")}" data-d="${s}" aria-label="${d} ${MONTHS[mo]}${list ? ", תפוס: " + esc(list.map(e=>e.family).join(", ")) : ""}"><span class="num">${d}</span><span class="hd">${esc(heb(s,true))}</span>${tag}</button>`;
+  }
+  $("#days").innerHTML = html;
+}
+
+function showDay(s) {
+  const st = check(s), d = parse(s);
+  let body = `<h3>יום ${DAYNAME[d.getDay()]}, ${d.getDate()} ב${MONTHS[d.getMonth()]}</h3><p class="sub" style="margin:0 0 14px">${esc(heb(s))}</p>`;
+  if (st.level === "taken") {
+    body += st.events.map(e => `<div class="ev ${isOfficial(e)?"":"priv"} ${isPending(e)?"pend":""}" style="margin-bottom:8px"><div class="d"><b>${d.getDate()}</b><small>${MONTHS[d.getMonth()].slice(0,3)}</small></div><div><h4>${esc(e.family)}</h4><p>${esc(e.type || "אירוע")}${e.location ? " · " + esc(e.location) : ""}${isPending(e) ? " · ממתין לאישור" : ""}</p></div></div>`).join("");
+    body += `<p class="sub" style="margin:10px 0 0">התאריך תפוס.</p>`;
+  } else if (st.level === "adjacent") {
+    body += `<p>התאריך צמוד לאירוע של <b>${esc(st.events.map(e=>e.family).join(", "))}</b>. אפשר להשתבץ רק בבקשה מיוחדת שמנהל המערכת יאשר.</p>`;
+    if (s >= todayIso) body += `<button class="btn btn-primary" onclick="window.__pick('${s}')">בקשה מיוחדת לתאריך הזה</button>`;
+  } else {
+    body += `<p>התאריך פנוי 🎉</p>`;
+    if (s >= todayIso) body += `<button class="btn btn-primary" onclick="window.__pick('${s}')">להשתבץ בתאריך הזה</button>`;
+  }
+  $("#dlgBody").innerHTML = body;
+  $("#dlg").showModal();
+}
+window.__pick = s => { $("#dlg").close(); $("#date").value = s; onDate(); location.hash = ""; $("#book").scrollIntoView(); };
+
+// ---------- list + stats ----------
+let filter = "up";
+function renderList() {
+  const a = active().slice().sort((x,y) => x.date.localeCompare(y.date));
+  const list = filter === "up" ? a.filter(e => e.date >= todayIso) : a.filter(e => e.date < todayIso).reverse();
+  $("#list").innerHTML = list.length ? list.map(e => {
+    const d = parse(e.date);
+    return `<div class="ev ${isOfficial(e)?"":"priv"} ${isPending(e)?"pend":""}"><div class="d"><b>${d.getDate()}</b><small>${MONTHS[d.getMonth()].slice(0,3)} ${String(d.getFullYear()).slice(2)}</small></div><div><h4>${esc(e.family)}${isPending(e)?'<span class="pill">ממתין לאישור</span>':""}</h4><p>${esc(e.type || "אירוע")} · יום ${DAYNAME[d.getDay()]}${e.location ? " · 📍 " + esc(e.location) : ""}</p><p>${esc(heb(e.date))}</p></div></div>`;
+  }).join("") : `<p class="sub">אין אירועים להצגה.</p>`;
+  const up = a.filter(e => e.date >= todayIso);
+  $("#sUpcoming").textContent = up.length;
+  const seasonStart = (new Date().getMonth() >= 8 ? new Date().getFullYear() : new Date().getFullYear()-1) + "-09-01";
+  $("#sSeason").textContent = a.filter(e => e.date >= seasonStart).length;
+  if (up[0]) { const d = parse(up[0].date); $("#sNext").textContent = `${d.getDate()}.${d.getMonth()+1}`; }
+}
+function render() { renderCal(); renderList(); }
+
+// ---------- form ----------
+function fillTypes() {
+  const k = document.querySelector("input[name=kind]:checked").value;
+  const arr = k === "official" ? C.OFFICIAL_TYPES : C.PRIVATE_TYPES;
+  $("#type").innerHTML = `<option value="">בחרו…</option>` + arr.map(t => `<option>${esc(t)}</option>`).join("");
+  $("#totalLabel").textContent = k === "official" ? "עלות" : "סה״כ לתשלום";
+  $("#donateHint").hidden = k !== "official";
+  $("#equip").classList.toggle("free", k === "official");
+  calcTotal();
+}
+function renderEquip() {
+  $("#equip").innerHTML = C.PRICES.map(p => `<div class="eq"><div class="n">${esc(p.name)}<small><span class="pr">${p.price} ₪${p.note ? " · " : ""}</span>${esc(p.note || "")}</small></div><div class="stepper"><button type="button" data-s="-1" data-id="${p.id}" aria-label="פחות">−</button><input type="number" min="0" inputmode="numeric" value="0" id="q_${p.id}" aria-label="כמות ${esc(p.name)}"><button type="button" data-s="1" data-id="${p.id}" aria-label="יותר">+</button></div></div>`).join("");
+  $("#priceTable tbody").innerHTML = C.PRICES.map(p => `<tr><td>${esc(p.name)}</td><td class="p">${p.price} ₪</td><td><small>${esc(p.note || "")}</small></td></tr>`).join("");
+}
+function equipment() {
+  return C.PRICES.map(p => ({ ...p, qty: Math.max(0, parseInt($("#q_"+p.id).value) || 0) })).filter(p => p.qty > 0);
+}
+function calcTotal() {
+  const k = document.querySelector("input[name=kind]:checked").value;
+  const sum = equipment().reduce((s,p) => s + p.qty * p.price, 0);
+  $("#total").textContent = k === "official" ? "ללא עלות" : sum + " ₪";
+  return k === "official" ? 0 : sum;
+}
+function setMsg(el, kind, html) { el.className = "msg show " + kind; el.innerHTML = html; }
+function clearMsg(el) { el.className = "msg"; el.innerHTML = ""; }
+
+function onDate() {
+  const s = $("#date").value, el = $("#dateMsg");
+  $("#hebDate").textContent = s ? heb(s) : "";
+  $("#specialWrap").hidden = true;
+  $("#mazal").hidden = true;
+  if (!s) return clearMsg(el);
+  if (s < todayIso) return setMsg(el, "err", "התאריך כבר עבר.");
+  const st = check(s);
+  if (st.level === "taken") setMsg(el, "err", `התאריך תפוס: ${esc(st.events.map(e => `${e.family} (${e.type || "אירוע"})`).join(", "))}. בחרו תאריך אחר.`);
+  else if (st.level === "adjacent") { setMsg(el, "warn", `התאריך צמוד לאירוע של ${esc(st.events.map(e => e.family).join(", "))}. לפי התקנון אין שיבוץ יום אחרי יום, אבל אפשר להגיש בקשה מיוחדת לאישור המנהל.`); $("#specialWrap").hidden = false; }
+  else setMsg(el, "ok", "התאריך פנוי ✓");
+  if (st.level !== "taken") $("#mazal").hidden = false;
+  view = parse(s); view.setDate(1); renderCal();
+}
+
+// ---------- signature pad ----------
+const cv = $("#sig"), ctx = cv.getContext("2d");
+let drawing = false, signed = false, last = null;
+function sizeCanvas() {
+  const r = cv.getBoundingClientRect(), dpr = window.devicePixelRatio || 1;
+  const img = signed ? cv.toDataURL() : null;
+  cv.width = r.width * dpr; cv.height = r.height * dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.lineWidth = 2.4; ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.strokeStyle = "#0f2a2e";
+  if (img) { const i = new Image(); i.onload = () => ctx.drawImage(i, 0, 0, r.width, r.height); i.src = img; }
+}
+const pt = e => { const r = cv.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+cv.addEventListener("pointerdown", e => { drawing = true; last = pt(e); cv.setPointerCapture(e.pointerId); ctx.beginPath(); ctx.arc(last.x, last.y, 1.1, 0, 7); ctx.fillStyle = "#0f2a2e"; ctx.fill(); });
+cv.addEventListener("pointermove", e => { if (!drawing) return; const p = pt(e); ctx.beginPath(); ctx.moveTo(last.x, last.y); ctx.lineTo(p.x, p.y); ctx.stroke(); last = p; if (!signed) { signed = true; $("#sigPh").hidden = true; } });
+["pointerup","pointercancel","pointerleave"].forEach(t => cv.addEventListener(t, () => drawing = false));
+$("#sigClear").onclick = () => { ctx.clearRect(0,0,cv.width,cv.height); signed = false; $("#sigPh").hidden = false; };
+function signaturePng() {
+  // white background so it's readable anywhere
+  const out = document.createElement("canvas"); out.width = cv.width; out.height = cv.height;
+  const o = out.getContext("2d"); o.fillStyle = "#fff"; o.fillRect(0,0,out.width,out.height); o.drawImage(cv,0,0);
+  return out.toDataURL("image/png");
+}
+
+// ---------- submit ----------
+$("#form").addEventListener("submit", async ev => {
+  ev.preventDefault();
+  const m = $("#formMsg"); clearMsg(m);
+  const kind = document.querySelector("input[name=kind]:checked").value;
+  const data = {
+    action: "book", kind, date: $("#date").value, type: $("#type").value,
+    family: $("#family").value.trim(), phone: $("#phone").value.trim(), location: $("#location").value.trim(),
+    notes: $("#notes").value.trim(), equipment: equipment().map(p => `${p.name} × ${p.qty}`).join(", "),
+    total: calcTotal(), special: $("#special").checked, specialReason: $("#specialWhy").value.trim(),
+    signer: $("#signer").value.trim(), waiver: C.WAIVER_TEXT, signedAt: new Date().toISOString(),
+  };
+  const errs = [];
+  if (!data.type) errs.push("סוג האירוע");
+  if (!data.date) errs.push("תאריך");
+  if (!data.family) errs.push("שם משפחה");
+  if (!/^[\d\s+\-]{9,}$/.test(data.phone)) errs.push("טלפון תקין");
+  if (!data.location) errs.push("מיקום במושב");
+  if (!data.signer) errs.push("שם החותם/ת");
+  if (!signed) errs.push("חתימה");
+  if (!$("#agree").checked) errs.push("אישור כתב הוויתור");
+  if (errs.length) return setMsg(m, "err", "חסר: " + errs.join(", "));
+  if (data.date < todayIso) return setMsg(m, "err", "התאריך כבר עבר.");
+  const st = check(data.date);
+  if (st.level === "taken") return setMsg(m, "err", "התאריך תפוס. בחרו תאריך אחר.");
+  if (st.level === "adjacent" && !data.special) return setMsg(m, "err", "התאריך צמוד לאירוע אחר. סמנו בקשה מיוחדת לאישור מנהל, או בחרו תאריך אחר.");
+  data.signature = signaturePng();
+
+  const btn = $("#submitBtn"); btn.disabled = true; btn.innerHTML = `<span class="spinner"></span> שולח…`;
+  try {
+    let res;
+    if (DEMO) {
+      res = { ok: true, status: data.special ? "ממתין לאישור מנהל" : "יעד", demo: true };
+      const local = lsGet(LS_LOCAL) || [];
+      local.push({ date: data.date, family: data.family, type: data.type, location: data.location, status: res.status, kind });
+      lsSet(LS_LOCAL, local);
+    } else {
+      const r = await fetch(C.API_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(data) });
+      res = await r.json();
+    }
+    if (!res.ok) throw new Error(res.error || "השיבוץ לא נקלט");
+    const pend = /ממתין/.test(res.status);
+    $("#form").reset(); $("#sigClear").click(); fillTypes(); onDate(); $("#signDate").value = new Date().toLocaleDateString("he-IL");
+    await load();
+    $("#dlgBody").innerHTML = `<h3>${pend ? "הבקשה נשלחה למנהל" : "נרשמתם! 🕷️"}</h3>
+      <p>${pend ? "הבקשה המיוחדת ממתינה לאישור מנהל המערכת. נחזור אליכם בטלפון." : "השיבוץ נקלט בלוח האירועים. צוות עכביש יצור קשר לתיאום האיסוף."}</p>
+      <div class="mazal" style="margin:0 0 14px">${mazalHtml}</div>
+      ${kind === "private" && data.total ? `<p>לתשלום: <b>${data.total} ₪</b> בפייבוקס של יו״ר הגמ״ח.</p>` : ""}
+      ${C.PAYBOX_URL ? `<a class="btn btn-plum" href="${esc(C.PAYBOX_URL)}" target="_blank" rel="noopener">${kind === "private" ? "לתשלום בפייבוקס" : "לתרומה בפייבוקס"}</a>` : ""}
+      ${res.demo ? `<p class="sub" style="margin-top:12px">מצב הדגמה: השיבוץ נשמר רק במכשיר הזה.</p>` : ""}`;
+    $("#dlg").showModal();
+  } catch (e) {
+    setMsg(m, "err", "לא הצלחנו לשלוח: " + esc(e.message) + ". נסו שוב.");
+  } finally { btn.disabled = false; btn.textContent = "שליחת שיבוץ"; }
+});
+
+// ---------- links ----------
+function wireLink(id, url, missing) {
+  const a = $(id);
+  if (url) a.href = url;
+  else a.addEventListener("click", e => { e.preventDefault(); toast(missing); });
+}
+wireLink("#payboxTile", C.PAYBOX_URL, "קישור הפייבוקס עוד לא הוגדר");
+wireLink("#photosTile", C.PHOTOS_URL, "קישור העלאת התמונות עוד לא הוגדר");
+wireLink("#heroDonate", C.PAYBOX_URL, "קישור הפייבוקס עוד לא הוגדר");
+wireLink("#heroPhotos", C.PHOTOS_URL, "קישור העלאת התמונות עוד לא הוגדר");
+if (C.ADMIN_WHATSAPP) $("#adminLink").innerHTML = `<a href="https://wa.me/${encodeURIComponent(C.ADMIN_WHATSAPP)}" target="_blank" rel="noopener">שאלות? וואטסאפ למנהל</a>`;
+
+// ---------- web background ----------
+(function web() {
+  const cx = 500, cy = 0, svg = $("#websvg"); let h = "";
+  const spokes = 14, R = [80,160,250,350,460,580,720];
+  for (let i = 0; i < spokes; i++) { const a = Math.PI * i / (spokes-1); h += `<line x1="${cx}" y1="${cy}" x2="${cx + Math.cos(a)*1000}" y2="${cy + Math.sin(a)*1000}"/>`; }
+  R.forEach(r => { let d = ""; for (let i = 0; i < spokes; i++) { const a = Math.PI * i / (spokes-1); const x = cx + Math.cos(a)*r, y = cy + Math.sin(a)*r; d += (i ? "L" : "M") + x.toFixed(1) + "," + y.toFixed(1); } h += `<path d="${d}"/>`; });
+  svg.innerHTML = h;
+})();
+
+// ---------- init ----------
+$("#dow").innerHTML = DOW.map(d => `<div class="dow">${d}</div>`).join("");
+$("#waiverText").textContent = C.WAIVER_TEXT;
+const MZ = C.MAZAL_TOV || { title: "", lines: [] };
+const mazalHtml = `<h4>${esc(MZ.title)}</h4><p>${esc(MZ.lines[0] || "")}</p><ul>${MZ.lines.slice(1).map(l => `<li>${esc(l)}</li>`).join("")}</ul>`;
+$("#mazal").innerHTML = mazalHtml;
+$("#signDate").value = new Date().toLocaleDateString("he-IL");
+renderEquip(); fillTypes();
+document.querySelectorAll("input[name=kind]").forEach(r => r.addEventListener("change", fillTypes));
+$("#equip").addEventListener("click", e => { const b = e.target.closest("button[data-s]"); if (!b) return; const i = $("#q_"+b.dataset.id); i.value = Math.max(0, (parseInt(i.value)||0) + Number(b.dataset.s)); calcTotal(); });
+$("#equip").addEventListener("input", calcTotal);
+$("#date").min = todayIso;
+$("#date").addEventListener("change", onDate);
+$("#days").addEventListener("click", e => { const b = e.target.closest(".day[data-d]"); if (b) showDay(b.dataset.d); });
+$("#prev").onclick = () => { view.setMonth(view.getMonth()-1); renderCal(); };
+$("#next").onclick = () => { view.setMonth(view.getMonth()+1); renderCal(); };
+document.querySelectorAll(".chip").forEach(c => c.onclick = () => { filter = c.dataset.f; document.querySelectorAll(".chip").forEach(x => x.setAttribute("aria-pressed", x === c)); renderList(); });
+$("#dlg").addEventListener("click", e => { if (e.target.id === "dlg") $("#dlg").close(); });
+requestAnimationFrame(sizeCanvas); window.addEventListener("resize", sizeCanvas);
+load();
+
+// ---------- PWA ----------
+let deferred;
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); deferred = e; $("#install").style.display = "inline-flex"; });
+$("#install").onclick = async () => { if (!deferred) return; deferred.prompt(); await deferred.userChoice; deferred = null; $("#install").style.display = "none"; };
+if ("serviceWorker" in navigator && location.protocol === "https:") {
+  navigator.serviceWorker.register("sw.js").catch(() => {});
+}
+})();
+</script>
+</body>
+</html>
