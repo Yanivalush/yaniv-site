@@ -20,18 +20,12 @@ window.AKAVISH_CONFIG = {
 
   // המחירון (₪)
   PRICES: [
-    { id: "pole4",   name: "עמוד תאורה 4 מטר",        price: 30 },
-    { id: "pole2",   name: "עמוד תאורה צהוב 2 מטר",   price: 10 },
     { id: "table",   name: "שולחן עגול (8 אנשים)",     price: 10 },
     { id: "chair",   name: "כיסא עץ",                  price: 3 },
-    { id: "cloth",   name: "מפה לשולחן",               price: 6,  note: "להחזיר אחרי כביסה וגיהוץ, יבשה במכבסה" },
     { id: "gar25",   name: "גרלנדה 25 מטר",            price: 30 },
     { id: "gar10",   name: "גרלנדה 10 מטר",            price: 15 },
     { id: "plata",   name: "פלטה שבת",                 price: 10 },
-    { id: "miham",   name: "מיחם שבת",                 price: 10 },
-    { id: "hamin",   name: "סיר חמין ענק",             price: 10, note: "להחזיר נקי" },
-    { id: "shaksh",  name: "סיר שקשוקה ענק",           price: 10, note: "להחזיר נקי" },
-    { id: "umbr",    name: "שמשייה",                   price: 10 }
+    { id: "miham",   name: "מיחם שבת",                 price: 10 }
   ],
 
   // ההודעה שמופיעה כשבוחרים תאריך פנוי (וגם אחרי השליחה)

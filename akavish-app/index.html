@@ -18,7 +18,7 @@
 :root{
   --ink:#10201f; --muted:#5b6b6a; --bg:#f4f1ea; --card:#ffffff; --line:#e3ded2;
   --teal:#13877f; --teal-d:#0f2a2e; --teal-l:#d7efec; --plum:#6b2d6b; --amber:#e8a33d; --red:#c2413b;
-  --official:#13877f; --private:#6b2d6b; --pending:#e8a33d;
+  --official:#13877f; --private:#6b2d6b; --pending:#e8a33d; --rose:#d6457a;
   --radius:18px; --shadow:0 10px 30px -12px rgba(15,42,46,.35);
 }
 @media (prefers-color-scheme: dark){
@@ -108,6 +108,9 @@ h2{font-family:"Secular One",Rubik,sans-serif;font-size:clamp(26px,4.4vw,36px);m
 .day.taken .tag{background:var(--official)}
 .day.taken.priv .tag{background:var(--private)}
 .day.taken.pend .tag{background:var(--pending);color:#3a2700}
+.day .ak{position:absolute;top:5px;left:5px;width:8px;height:8px;border-radius:50%;background:var(--rose)}
+.day.akonly .tag{background:var(--rose)}
+.akinfo{margin-top:12px;padding:10px 12px;border-radius:12px;border:1px dashed var(--rose);font-size:14px;background:color-mix(in srgb,var(--rose) 8%,var(--card))}
 .day.adj{background:repeating-linear-gradient(-45deg,var(--bg) 0 6px,color-mix(in srgb,var(--line) 70%,transparent) 6px 8px)}
 .day.free:hover{border-color:var(--teal)}
 .day.sel{outline:3px solid var(--teal);outline-offset:1px}
@@ -130,7 +133,7 @@ h2{font-family:"Secular One",Rubik,sans-serif;font-size:clamp(26px,4.4vw,36px);m
 .pill{display:inline-block;font-size:11px;padding:1px 8px;border-radius:999px;background:var(--teal-l);color:var(--ink);margin-inline-start:6px;vertical-align:1px}
 .filters{display:flex;gap:6px;margin-bottom:10px}
 .chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:14px}
-.chip[aria-pressed="true"]{background:var(--teal);color:#fff;border-color:var(--teal)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 
 /* ---------- FORM ---------- */
 form .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -265,6 +268,7 @@ dialog h3{margin:0 0 4px;font-size:22px}
           <span><i style="background:var(--official)"></i>אירוע רשמי</span>
           <span><i style="background:var(--private)"></i>אירוע פרטי</span>
           <span><i style="background:var(--pending)"></i>ממתין לאישור</span>
+          <span><i style="background:var(--rose);border-radius:50%"></i>עכבישות (לידיעה בלבד)</span>
           <span><i style="background:repeating-linear-gradient(-45deg,var(--bg) 0 3px,var(--muted) 3px 4px)"></i>צמוד לאירוע (בקשה מיוחדת)</span>
         </div>
       </div>
@@ -424,7 +428,12 @@ const heb = (s, short) => { const p = hebParts(s); if (!p || !p.day) return ""; 
 const isOfficial = e => e.kind ? e.kind === "official" : OFFICIAL_RX.test(e.type || "");
 const isPending = e => /ממתין|בקשה/.test(e.status || "");
 const active = () => events.filter(e => !/בוטל|נדחה/.test(e.status || ""));
-const byDate = () => { const m = {}; active().forEach(e => (m[e.date] ||= []).push(e)); return m; };
+// "עכבישות" = ציוד של צוות עכבישות בלבד: מסומן בלוח לידיעה, לא חוסם שיבוץ ולא נכנס לרשימות
+const isAkavishot = e => !!e.akavishot || /עכבישות/.test(`${e.family} ${e.type} ${e.location} ${e.status}`);
+const real = () => active().filter(e => !isAkavishot(e));
+const byDate = () => { const m = {}; real().forEach(e => (m[e.date] ||= []).push(e)); return m; };
+const akByDate = () => { const m = {}; active().filter(isAkavishot).forEach(e => (m[e.date] ||= []).push(e)); return m; };
+const akNote = list => list && list.length ? `<div class="akinfo">🎀 <b>עכבישות:</b> ${esc(list.map(e => e.family || "ציוד").join(", "))}. לידיעת צוות עכבישות בלבד, לא חוסם שיבוץ.</div>` : "";
 const toast = t => { const el = $("#toast"); el.textContent = t; el.classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove("show"), 3500); };
 
 // ---------- data ----------
@@ -473,7 +482,7 @@ function renderCal() {
     hebRange = a.month === b.month ? `${a.month} ${a.year}` : (a.year === b.year ? `${a.month} – ${b.month} ${b.year}` : `${a.month} ${a.year} – ${b.month} ${b.year}`);
   } catch(e) {}
   $("#monthTitle").innerHTML = `${MONTHS[mo]} ${y}<small>${esc(hebRange)}</small>`;
-  const m = byDate();
+  const m = byDate(), ak = akByDate();
   const sel = $("#date").value;
   let html = "";
   for (let i = 0; i < first.getDay(); i++) html += `<div class="day out"></div>`;
@@ -491,6 +500,7 @@ function renderCal() {
       tag = `<span class="tag">${esc(list.map(e => e.family).join(" + "))}</span>`;
     } else if (m[addDays(s,-1)] || m[addDays(s,1)]) cls.push("adj");
     else cls.push("free");
+    if (ak[s]) { tag += `<span class="ak" title="עכבישות"></span>`; if (!list) { cls.push("akonly"); tag += `<span class="tag">עכבישות</span>`; } }
     html += `<button type="button" class="${cls.join(" ")}" data-d="${s}" aria-label="${d} ${MONTHS[mo]}${list ? ", תפוס: " + esc(list.map(e=>e.family).join(", ")) : ""}"><span class="num">${d}</span><span class="hd">${esc(heb(s,true))}</span>${tag}</button>`;
   }
   $("#days").innerHTML = html;
@@ -509,6 +519,7 @@ function showDay(s) {
     body += `<p>התאריך פנוי 🎉</p>`;
     if (s >= todayIso) body += `<button class="btn btn-primary" onclick="window.__pick('${s}')">להשתבץ בתאריך הזה</button>`;
   }
+  body += akNote(akByDate()[s]);
   $("#dlgBody").innerHTML = body;
   $("#dlg").showModal();
 }
@@ -517,7 +528,7 @@ window.__pick = s => { $("#dlg").close(); $("#date").value = s; onDate(); locati
 // ---------- list + stats ----------
 let filter = "up";
 function renderList() {
-  const a = active().slice().sort((x,y) => x.date.localeCompare(y.date));
+  const a = real().slice().sort((x,y) => x.date.localeCompare(y.date));
   const list = filter === "up" ? a.filter(e => e.date >= todayIso) : a.filter(e => e.date < todayIso).reverse();
   $("#list").innerHTML = list.length ? list.map(e => {
     const d = parse(e.date);
