@@ -168,7 +168,8 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--teal);bo
 .total b{font-size:24px;font-family:"Secular One",Rubik}
 .findrow{display:flex;gap:8px;flex-wrap:wrap}
 .findrow input{flex:1 1 180px}
-.ev .act{margin-top:6px}
+.ev .act{margin-top:6px;display:flex;gap:8px;flex-wrap:wrap}
+.ev .act button.del{border-color:#c0392b;color:#c0392b}
 .ev .act button{font:inherit;font-size:14px;padding:6px 14px;border-radius:999px;border:2px solid var(--teal);background:transparent;color:var(--teal);cursor:pointer;font-weight:600}
 .ev.on{outline:3px solid var(--teal)}
 #eEquip.free .pr{display:none}
@@ -376,9 +377,8 @@ dialog h3{margin:0 0 4px;font-size:22px}
         <div class="equip" id="eEquip"></div>
         <div class="total"><span>סה״כ לתשלום</span><b id="eTotal">0 ₪</b></div>
         <div class="msg" id="editMsg"></div>
-        <div class="cta" style="justify-content:space-between;margin-top:18px">
+        <div class="cta" style="justify-content:flex-start;margin-top:18px">
           <button class="btn btn-primary" type="submit" id="saveBtn">שמירת השינויים</button>
-          <button class="btn btn-danger" type="button" id="cancelBtn">ביטול השיבוץ</button>
         </div>
       </form>
     </div>
@@ -754,7 +754,7 @@ function eTotal() {
 function renderMine() {
   $("#mine").innerHTML = mine.map((e, i) => {
     const d = parse(e.date);
-    return `<div class="ev ${e.kind === "private" ? "priv" : ""} ${isPending(e) ? "pend" : ""} ${cur && cur.id === e.id ? "on" : ""}"><div class="d"><b>${d.getDate()}</b><small>${MONTHS[d.getMonth()].slice(0,3)} ${String(d.getFullYear()).slice(2)}</small></div><div><h4>${esc(e.family)}${isPending(e)?'<span class="pill">ממתין לאישור</span>':""}</h4><p>${esc(e.type || "אירוע")} · יום ${DAYNAME[d.getDay()]}${e.location ? " · 📍 " + esc(e.location) : ""}</p><div class="act"><button type="button" data-i="${i}">עריכה</button></div></div></div>`;
+    return `<div class="ev ${e.kind === "private" ? "priv" : ""} ${isPending(e) ? "pend" : ""} ${cur && cur.id === e.id ? "on" : ""}"><div class="d"><b>${d.getDate()}</b><small>${MONTHS[d.getMonth()].slice(0,3)} ${String(d.getFullYear()).slice(2)}</small></div><div><h4>${esc(e.family)}${isPending(e)?'<span class="pill">ממתין לאישור</span>':""}</h4><p>${esc(e.type || "אירוע")} · יום ${DAYNAME[d.getDay()]}${e.location ? " · 📍 " + esc(e.location) : ""}</p><div class="act"><button type="button" data-i="${i}">עריכה</button><button type="button" class="del" data-c="${i}">ביטול השיבוץ</button></div></div></div>`;
   }).join("");
 }
 async function findMine() {
@@ -792,8 +792,8 @@ function onEDate() {
   else if (st.level === "adjacent") { setMsg(el, "warn", `התאריך צמוד לאירוע של ${esc(st.events.map(e => e.family).join(", "))}. אפשר לבקש אישור מיוחד מהמנהל.`); $("#eSpecialWrap").hidden = false; }
   else setMsg(el, "ok", "התאריך פנוי ✓");
 }
-async function saveEdit(cancel) {
-  const m = $("#editMsg"); clearMsg(m);
+async function saveEdit(cancel, cbtn) {
+  const m = cancel ? $("#findMsg") : $("#editMsg"); clearMsg(m);
   if (!cur) return;
   const { extra } = parseEquip(cur.equipment);
   const data = { action: "edit", id: cur.id, phone: $("#editPhone").value.trim(), cancel: !!cancel,
@@ -808,8 +808,8 @@ async function saveEdit(cancel) {
       if (st.level === "taken") return setMsg(m, "err", "התאריך תפוס. בחרו תאריך אחר.");
       if (st.level === "adjacent" && !data.special) return setMsg(m, "err", "התאריך צמוד לאירוע אחר. סמנו בקשה מיוחדת, או בחרו תאריך אחר.");
     }
-  } else if (!confirm(`לבטל את השיבוץ של ${cur.family} בתאריך ${cur.date.split("-").reverse().join(".")}?`)) return;
-  const btn = cancel ? $("#cancelBtn") : $("#saveBtn"), label = btn.textContent;
+  } else if (!confirm(`לבטל את השיבוץ של ${cur.family} בתאריך ${cur.date.split("-").reverse().join(".")}?`)) { cur = null; return; }
+  const btn = cancel ? cbtn : $("#saveBtn"), label = btn.textContent;
   btn.disabled = true; btn.innerHTML = `<span class="spinner"></span> שולח…`;
   try {
     const res = await api(data);
@@ -824,12 +824,14 @@ async function saveEdit(cancel) {
   finally { btn.disabled = false; btn.textContent = label; }
 }
 $("#findForm").addEventListener("submit", e => { e.preventDefault(); findMine(); });
-$("#mine").addEventListener("click", e => { const b = e.target.closest("button[data-i]"); if (b) openEdit(mine[+b.dataset.i]); });
+$("#mine").addEventListener("click", e => {
+  const b = e.target.closest("button[data-i]"); if (b) return openEdit(mine[+b.dataset.i]);
+  const c = e.target.closest("button[data-c]"); if (c) { cur = mine[+c.dataset.c]; saveEdit(true, c); }
+});
 $("#eDate").addEventListener("change", onEDate);
 $("#eEquip").addEventListener("click", e => { const b = e.target.closest("button[data-s]"); if (!b) return; const i = $("#e_"+b.dataset.id); i.value = Math.max(0, (parseInt(i.value)||0) + Number(b.dataset.s)); eTotal(); });
 $("#eEquip").addEventListener("input", eTotal);
 $("#editForm").addEventListener("submit", e => { e.preventDefault(); saveEdit(false); });
-$("#cancelBtn").onclick = () => saveEdit(true);
 
 // ---------- links ----------
 function wireLink(id, url, missing) {
