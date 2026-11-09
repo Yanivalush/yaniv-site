@@ -78,7 +78,7 @@ body.has-view .burger{display:none}
 dialog.drawer{margin:0 0 0 auto;height:100%;max-height:none;max-width:min(320px,84vw);border-radius:0 0 0 24px;inset-inline-start:0;inset-inline-end:auto;padding:0;animation:slide .25s ease-out}
 @keyframes slide{from{transform:translateX(100%)}}
 .drawer .top{display:flex;align-items:center;gap:12px;padding:18px 18px 10px;background:var(--teal-d);color:#fff}
-.drawer .top img{width:46px;height:46px;border-radius:50%;background:#fff;padding:4px}
+.drawer .top img{width:46px;height:46px;object-fit:contain;border-radius:12px;background:#fff;padding:3px}
 .drawer .top b{font-family:"Secular One",Rubik;font-size:20px}
 .drawer nav{display:flex;flex-direction:column;padding:10px}
 .drawer nav a{display:flex;align-items:center;gap:12px;padding:14px 12px;border-radius:14px;text-decoration:none;font-weight:500;font-size:17px}
@@ -227,7 +227,7 @@ table.prices small{color:var(--muted)}
 .tile p{margin:0 0 14px;opacity:.9}
 .tile .btn{align-self:flex-start}
 footer{padding:40px 16px 60px;text-align:center;color:var(--muted);font-size:14px}
-footer img{width:70px;margin:0 auto 8px;background:#fff;border-radius:50%;padding:8px}
+footer img{width:96px;height:auto;margin:0 auto 10px;background:#fff;border-radius:20px;padding:10px 12px;box-shadow:var(--shadow)}
 
 /* ---------- DIALOG / TOAST ---------- */
 dialog{border:0;border-radius:22px;padding:0;max-width:min(440px,92vw);width:100%;background:var(--card);color:var(--ink);box-shadow:0 30px 80px -20px #000}
