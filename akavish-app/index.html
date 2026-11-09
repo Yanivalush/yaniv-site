@@ -166,6 +166,13 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--teal);bo
 .stepper input{width:46px;min-height:34px;padding:4px;text-align:center;border-radius:8px}
 .total{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding:14px 16px;border-radius:14px;background:var(--teal-d);color:#fff;font-size:18px}
 .total b{font-size:24px;font-family:"Secular One",Rubik}
+.findrow{display:flex;gap:8px;flex-wrap:wrap}
+.findrow input{flex:1 1 180px}
+.ev .act{margin-top:6px}
+.ev .act button{font:inherit;font-size:14px;padding:6px 14px;border-radius:999px;border:2px solid var(--teal);background:transparent;color:var(--teal);cursor:pointer;font-weight:600}
+.ev.on{outline:3px solid var(--teal)}
+#eEquip.free .pr{display:none}
+.btn-danger{background:transparent;border:2px solid #c0392b;color:#c0392b}
 .mazal{margin-top:12px;padding:16px 18px;border-radius:16px;background:linear-gradient(135deg,color-mix(in srgb,var(--teal) 16%,var(--card)),color-mix(in srgb,var(--plum) 12%,var(--card)));border:1px solid color-mix(in srgb,var(--teal) 35%,transparent)}
 .mazal h4{margin:0 0 6px;font-family:"Secular One",Rubik,sans-serif;font-size:20px;color:var(--teal)}
 .mazal p{margin:0 0 8px;font-size:15px}
@@ -239,6 +246,7 @@ dialog h3{margin:0 0 4px;font-size:22px}
     <img class="mini" src="img/logo.png" alt="">
     <a href="#calendar">לוח אירועים</a>
     <a href="#book">שיבוץ</a>
+    <a href="#edit">עריכה</a>
     <a href="#prices">מחירון</a>
     <a href="#rules">תקנון</a>
     <a href="#support">תרומה ותמונות</a>
@@ -290,7 +298,7 @@ dialog h3{margin:0 0 4px;font-size:22px}
   <!-- ============ BOOKING ============ -->
   <section id="book">
     <h2>שיבוץ לאירוע</h2>
-    <p class="sub">אירוע רשמי לפי סעיף 4 בתקנון הוא ללא עלות (אפשר לתרום למיזם). אירוע פרטי בתשלום לפי המחירון.</p>
+    <p class="sub">אירוע רשמי לפי סעיף 4 בתקנון הוא ללא עלות (אפשר לתרום למיזם). אירוע פרטי בתשלום לפי המחירון. כבר נרשמתם? <a href="#edit">לשינוי או ביטול שיבוץ</a></p>
     <form class="card" id="form" novalidate>
       <label>סוג האירוע</label>
       <div class="kind">
@@ -339,6 +347,41 @@ dialog h3{margin:0 0 4px;font-size:22px}
         <button class="btn btn-primary" type="submit" id="submitBtn">שליחת שיבוץ</button>
       </div>
     </form>
+  </section>
+
+  <!-- ============ EDIT ============ -->
+  <section id="edit">
+    <h2>שינוי או ביטול שיבוץ</h2>
+    <p class="sub">הזינו את מספר הטלפון שאיתו נרשמתם, ותראו את השיבוצים הקרובים שלכם. אפשר לשנות תאריך, מיקום וציוד, או לבטל.</p>
+    <div class="card">
+      <form id="findForm" class="findrow" novalidate>
+        <input id="editPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="050-0000000" aria-label="טלפון">
+        <button class="btn btn-primary" type="submit" id="findBtn">הצגת השיבוצים שלי</button>
+      </form>
+      <div class="msg" id="findMsg"></div>
+      <div class="list" id="mine" style="margin-top:12px"></div>
+      <form id="editForm" hidden novalidate>
+        <h3 id="editTitle" style="margin:18px 0 4px"></h3>
+        <div class="row">
+          <div><label for="eDate">תאריך</label><input type="date" id="eDate"><small id="eHeb" style="color:var(--muted);font-size:13px"></small></div>
+          <div><label for="eLoc">איפה במושב?</label><input id="eLoc"></div>
+        </div>
+        <div class="msg" id="eDateMsg"></div>
+        <div id="eSpecialWrap" hidden>
+          <label class="check"><input type="checkbox" id="eSpecial"> <span>אני מבקש/ת אישור מיוחד ממנהל המערכת לשיבוץ בתאריך הצמוד לאירוע אחר</span></label>
+          <label for="eSpecialWhy">סיבת הבקשה</label>
+          <textarea id="eSpecialWhy" rows="2"></textarea>
+        </div>
+        <label>ציוד</label>
+        <div class="equip" id="eEquip"></div>
+        <div class="total"><span>סה״כ לתשלום</span><b id="eTotal">0 ₪</b></div>
+        <div class="msg" id="editMsg"></div>
+        <div class="cta" style="justify-content:space-between;margin-top:18px">
+          <button class="btn btn-primary" type="submit" id="saveBtn">שמירת השינויים</button>
+          <button class="btn btn-danger" type="button" id="cancelBtn">ביטול השיבוץ</button>
+        </div>
+      </form>
+    </div>
   </section>
 
   <!-- ============ PRICES ============ -->
@@ -467,8 +510,9 @@ async function load() {
 }
 
 // ---------- conflict rules ----------
-function check(date) {
-  const m = byDate();
+function check(date, skip) {
+  const self = e => skip && (e.id ? e.id === skip.id : e.date === skip.date && e.family === skip.family);
+  const m = {}; real().filter(e => !self(e)).forEach(e => (m[e.date] ||= []).push(e));
   if (m[date]) return { level: "taken", events: m[date] };
   const near = [...(m[addDays(date,-1)] || []), ...(m[addDays(date,1)] || [])];
   if (near.length) return { level: "adjacent", events: near };
@@ -557,8 +601,10 @@ function fillTypes() {
   $("#equip").classList.toggle("free", k === "official");
   calcTotal();
 }
+const eqHtml = pre => C.PRICES.map(p => `<div class="eq"><div class="n">${esc(p.name)}<small><span class="pr">${p.price} ₪${p.note ? " · " : ""}</span>${esc(p.note || "")}</small></div><div class="stepper"><button type="button" data-s="-1" data-id="${p.id}" aria-label="פחות">−</button><input type="number" min="0" inputmode="numeric" value="0" id="${pre}${p.id}" aria-label="כמות ${esc(p.name)}"><button type="button" data-s="1" data-id="${p.id}" aria-label="יותר">+</button></div></div>`).join("");
 function renderEquip() {
-  $("#equip").innerHTML = C.PRICES.map(p => `<div class="eq"><div class="n">${esc(p.name)}<small><span class="pr">${p.price} ₪${p.note ? " · " : ""}</span>${esc(p.note || "")}</small></div><div class="stepper"><button type="button" data-s="-1" data-id="${p.id}" aria-label="פחות">−</button><input type="number" min="0" inputmode="numeric" value="0" id="q_${p.id}" aria-label="כמות ${esc(p.name)}"><button type="button" data-s="1" data-id="${p.id}" aria-label="יותר">+</button></div></div>`).join("");
+  $("#equip").innerHTML = eqHtml("q_");
+  $("#eEquip").innerHTML = eqHtml("e_");
   $("#priceTable tbody").innerHTML = C.PRICES.map(p => `<tr><td>${esc(p.name)}</td><td class="p">${p.price} ₪</td><td><small>${esc(p.note || "")}</small></td></tr>`).join("");
 }
 function equipment() {
@@ -645,7 +691,7 @@ $("#form").addEventListener("submit", async ev => {
     if (DEMO) {
       res = { ok: true, status: data.special ? "ממתין לאישור מנהל" : "יעד", demo: true };
       const local = lsGet(LS_LOCAL) || [];
-      local.push({ date: data.date, family: data.family, type: data.type, location: data.location, status: res.status, kind });
+      local.push({ id: "local!" + Date.now(), date: data.date, family: data.family, type: data.type, location: data.location, status: res.status, kind, phone: data.phone, equipment: data.equipment });
       lsSet(LS_LOCAL, local);
     } else {
       const r = await fetch(C.API_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(data) });
@@ -660,12 +706,130 @@ $("#form").addEventListener("submit", async ev => {
       <div class="mazal" style="margin:0 0 14px">${mazalHtml}</div>
       ${kind === "private" && data.total ? `<p>לתשלום: <b>${data.total} ₪</b> בפייבוקס של יו״ר הגמ״ח.</p>` : ""}
       ${C.PAYBOX_URL ? `<a class="btn btn-plum" href="${esc(C.PAYBOX_URL)}" target="_blank" rel="noopener">${kind === "private" ? "לתשלום בפייבוקס" : "לתרומה בפייבוקס"}</a>` : ""}
+      <p class="sub" style="margin-top:12px">צריך לשנות תאריך, מיקום או ציוד? בקטע <b>שינוי או ביטול שיבוץ</b> מזינים את הטלפון ${esc(data.phone)}.</p>
       ${res.demo ? `<p class="sub" style="margin-top:12px">מצב הדגמה: השיבוץ נשמר רק במכשיר הזה.</p>` : ""}`;
     $("#dlg").showModal();
   } catch (e) {
     setMsg(m, "err", "לא הצלחנו לשלוח: " + esc(e.message) + ". נסו שוב.");
   } finally { btn.disabled = false; btn.textContent = "שליחת שיבוץ"; }
 });
+
+// ---------- edit my booking ----------
+const phoneKey = p => { const d = String(p || "").replace(/\D/g, ""); return d.length >= 9 ? d.slice(-9) : ""; };
+async function post(data) {
+  const r = await fetch(C.API_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(data) });
+  const j = await r.json();
+  if (!j.ok) throw new Error(j.error || "שגיאה");
+  return j;
+}
+// מצב הדגמה: עובד על השיבוצים שנשמרו במכשיר
+function demoApi(d) {
+  const local = lsGet(LS_LOCAL) || [], key = phoneKey(d.phone);
+  if (d.action === "mine") return { ok: true, events: local.filter(e => phoneKey(e.phone) === key && e.date >= todayIso && !/בוטל/.test(e.status)) };
+  const e = local.find(x => x.id === d.id && phoneKey(x.phone) === key);
+  if (!e) throw new Error("השיבוץ לא נמצא");
+  if (d.cancel) e.status = "בוטל";
+  else { const st = check(d.date, e); if (st.level === "taken") throw new Error("התאריך תפוס"); if (st.level === "adjacent" && !d.special) throw new Error("יש לסמן בקשה מיוחדת"); if (d.date !== e.date) e.status = st.level === "adjacent" ? "ממתין לאישור מנהל" : "יעד"; Object.assign(e, { date: d.date, location: d.location, equipment: d.equipment }); }
+  lsSet(LS_LOCAL, local);
+  return { ok: true, changed: true, status: e.status };
+}
+const api = d => DEMO ? Promise.resolve().then(() => demoApi(d)) : post(d);
+
+let mine = [], cur = null;
+function parseEquip(str) {
+  const q = {}, extra = [];
+  String(str || "").split(/\s*,\s*/).filter(Boolean).forEach(part => {
+    const m = part.match(/^(.*?)\s*[×x*]\s*(\d+)$/);
+    const p = m && C.PRICES.find(p => p.name === m[1].trim());
+    if (p) q[p.id] = +m[2]; else extra.push(part);
+  });
+  return { q, extra };
+}
+const eEquipment = () => C.PRICES.map(p => ({ ...p, qty: Math.max(0, parseInt($("#e_"+p.id).value) || 0) })).filter(p => p.qty > 0);
+function eTotal() {
+  const sum = eEquipment().reduce((s,p) => s + p.qty * p.price, 0);
+  $("#eTotal").textContent = cur && cur.kind === "official" ? "ללא עלות" : sum + " ₪";
+  return cur && cur.kind === "official" ? 0 : sum;
+}
+function renderMine() {
+  $("#mine").innerHTML = mine.map((e, i) => {
+    const d = parse(e.date);
+    return `<div class="ev ${e.kind === "private" ? "priv" : ""} ${isPending(e) ? "pend" : ""} ${cur && cur.id === e.id ? "on" : ""}"><div class="d"><b>${d.getDate()}</b><small>${MONTHS[d.getMonth()].slice(0,3)} ${String(d.getFullYear()).slice(2)}</small></div><div><h4>${esc(e.family)}${isPending(e)?'<span class="pill">ממתין לאישור</span>':""}</h4><p>${esc(e.type || "אירוע")} · יום ${DAYNAME[d.getDay()]}${e.location ? " · 📍 " + esc(e.location) : ""}</p><div class="act"><button type="button" data-i="${i}">עריכה</button></div></div></div>`;
+  }).join("");
+}
+async function findMine() {
+  const m = $("#findMsg"); clearMsg(m);
+  const phone = $("#editPhone").value.trim();
+  if (!phoneKey(phone)) return setMsg(m, "err", "הזינו מספר טלפון מלא.");
+  const btn = $("#findBtn"); btn.disabled = true;
+  try {
+    const j = await api({ action: "mine", phone });
+    mine = j.events; cur = null; $("#editForm").hidden = true; renderMine();
+    if (!mine.length) setMsg(m, "warn", "לא מצאנו שיבוצים קרובים עם הטלפון הזה. אם השיבוץ נרשם ידנית אצל הצוות, פנו אליהם לשינוי.");
+  } catch (e) { setMsg(m, "err", "לא הצלחנו לבדוק: " + esc(e.message)); }
+  finally { btn.disabled = false; }
+}
+function openEdit(e) {
+  cur = e; renderMine(); clearMsg($("#editMsg"));
+  $("#editTitle").textContent = `עריכת השיבוץ של ${e.family}`;
+  $("#eDate").value = e.date; $("#eDate").min = todayIso; $("#eLoc").value = e.location;
+  $("#eSpecial").checked = false; $("#eSpecialWhy").value = "";
+  const { q } = parseEquip(e.equipment);
+  C.PRICES.forEach(p => $("#e_"+p.id).value = q[p.id] || 0);
+  $("#eEquip").classList.toggle("free", e.kind === "official");
+  eTotal(); onEDate();
+  $("#editForm").hidden = false;
+  $("#editForm").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+function onEDate() {
+  const s = $("#eDate").value, el = $("#eDateMsg");
+  $("#eHeb").textContent = s ? heb(s) : "";
+  $("#eSpecialWrap").hidden = true;
+  if (!s || !cur || s === cur.date) return clearMsg(el);
+  if (s < todayIso) return setMsg(el, "err", "התאריך כבר עבר.");
+  const st = check(s, cur);
+  if (st.level === "taken") setMsg(el, "err", `התאריך תפוס: ${esc(st.events.map(e => e.family).join(", "))}.`);
+  else if (st.level === "adjacent") { setMsg(el, "warn", `התאריך צמוד לאירוע של ${esc(st.events.map(e => e.family).join(", "))}. אפשר לבקש אישור מיוחד מהמנהל.`); $("#eSpecialWrap").hidden = false; }
+  else setMsg(el, "ok", "התאריך פנוי ✓");
+}
+async function saveEdit(cancel) {
+  const m = $("#editMsg"); clearMsg(m);
+  if (!cur) return;
+  const { extra } = parseEquip(cur.equipment);
+  const data = { action: "edit", id: cur.id, phone: $("#editPhone").value.trim(), cancel: !!cancel,
+    date: $("#eDate").value, location: $("#eLoc").value.trim(),
+    equipment: [...eEquipment().map(p => `${p.name} × ${p.qty}`), ...extra].join(", "), total: eTotal(),
+    special: $("#eSpecial").checked, specialReason: $("#eSpecialWhy").value.trim() };
+  if (!cancel) {
+    if (!data.date || !data.location) return setMsg(m, "err", "חסר תאריך או מיקום.");
+    if (data.date !== cur.date) {
+      if (data.date < todayIso) return setMsg(m, "err", "התאריך כבר עבר.");
+      const st = check(data.date, cur);
+      if (st.level === "taken") return setMsg(m, "err", "התאריך תפוס. בחרו תאריך אחר.");
+      if (st.level === "adjacent" && !data.special) return setMsg(m, "err", "התאריך צמוד לאירוע אחר. סמנו בקשה מיוחדת, או בחרו תאריך אחר.");
+    }
+  } else if (!confirm(`לבטל את השיבוץ של ${cur.family} בתאריך ${cur.date.split("-").reverse().join(".")}?`)) return;
+  const btn = cancel ? $("#cancelBtn") : $("#saveBtn"), label = btn.textContent;
+  btn.disabled = true; btn.innerHTML = `<span class="spinner"></span> שולח…`;
+  try {
+    const res = await api(data);
+    $("#editForm").hidden = true; cur = null;
+    await load(); await findMine();
+    const pend = /ממתין/.test(res.status || "");
+    $("#dlgBody").innerHTML = cancel ? `<h3>השיבוץ בוטל</h3><p>התאריך התפנה בלוח. תודה שעדכנתם!</p>`
+      : !res.changed ? `<h3>לא היה מה לשנות</h3><p>הפרטים נשארו כמו שהיו.</p>`
+      : `<h3>${pend ? "השינוי נשלח לאישור המנהל" : "השינוי נשמר ✓"}</h3><p>${pend ? "התאריך החדש צמוד לאירוע אחר, ולכן ממתין לאישור מנהל המערכת." : "הלוח עודכן. צוות עכביש יראה את השינוי בגיליון."}</p>`;
+    $("#dlg").showModal();
+  } catch (e) { setMsg(m, "err", "לא הצלחנו לשמור: " + esc(e.message)); }
+  finally { btn.disabled = false; btn.textContent = label; }
+}
+$("#findForm").addEventListener("submit", e => { e.preventDefault(); findMine(); });
+$("#mine").addEventListener("click", e => { const b = e.target.closest("button[data-i]"); if (b) openEdit(mine[+b.dataset.i]); });
+$("#eDate").addEventListener("change", onEDate);
+$("#eEquip").addEventListener("click", e => { const b = e.target.closest("button[data-s]"); if (!b) return; const i = $("#e_"+b.dataset.id); i.value = Math.max(0, (parseInt(i.value)||0) + Number(b.dataset.s)); eTotal(); });
+$("#eEquip").addEventListener("input", eTotal);
+$("#editForm").addEventListener("submit", e => { e.preventDefault(); saveEdit(false); });
+$("#cancelBtn").onclick = () => saveEdit(true);
 
 // ---------- links ----------
 function wireLink(id, url, missing) {
