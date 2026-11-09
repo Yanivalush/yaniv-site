@@ -71,12 +71,30 @@ button,input,select,textarea{font:inherit;color:inherit}
 .btn-outline{background:transparent;border:2px solid var(--teal);color:var(--teal)}
 .btn svg{width:20px;height:20px}
 
-/* ---------- NAV ---------- */
-nav.tabs{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-nav.tabs .wrap{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-top:8px;padding-bottom:8px;align-items:center}
-nav.tabs a{flex:none;padding:8px 14px;border-radius:999px;text-decoration:none;font-weight:500;color:var(--muted);font-size:15px}
-nav.tabs a:hover{background:var(--teal-l);color:var(--ink)}
-nav.tabs .mini{width:34px;height:34px;border-radius:50%;background:#fff;padding:3px;flex:none;margin-inline-end:6px}
+/* ---------- MENU ---------- */
+.burger{position:fixed;top:max(14px,env(safe-area-inset-top));inset-inline-start:14px;z-index:30;width:50px;height:50px;border-radius:16px;border:1px solid rgba(255,255,255,.3);background:rgba(15,42,46,.55);backdrop-filter:blur(10px);color:#fff;cursor:pointer;display:grid;place-items:center;box-shadow:0 8px 24px -8px #000}
+.burger svg,.vbar svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+body.has-view .burger{display:none}
+dialog.drawer{margin:0 0 0 auto;height:100%;max-height:none;max-width:min(320px,84vw);border-radius:0 0 0 24px;inset-inline-start:0;inset-inline-end:auto;padding:0;animation:slide .25s ease-out}
+@keyframes slide{from{transform:translateX(100%)}}
+.drawer .top{display:flex;align-items:center;gap:12px;padding:18px 18px 10px;background:var(--teal-d);color:#fff}
+.drawer .top img{width:46px;height:46px;border-radius:50%;background:#fff;padding:4px}
+.drawer .top b{font-family:"Secular One",Rubik;font-size:20px}
+.drawer nav{display:flex;flex-direction:column;padding:10px}
+.drawer nav a{display:flex;align-items:center;gap:12px;padding:14px 12px;border-radius:14px;text-decoration:none;font-weight:500;font-size:17px}
+.drawer nav a:hover{background:var(--teal-l)}
+.drawer nav a span{width:28px;text-align:center;font-size:20px}
+
+/* ---------- VIEWS (screens that open on demand) ---------- */
+.view{position:fixed;inset:0;z-index:40;background:var(--bg);overflow:auto;padding:0 0 60px;animation:viewIn .22s ease-out}
+.view[hidden]{display:none}
+@keyframes viewIn{from{opacity:0;transform:translateY(24px)}}
+body.has-view{overflow:hidden}
+.vbar{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:8px;padding:10px 12px;padding-top:max(10px,env(safe-area-inset-top));background:var(--teal-d);color:#fff;box-shadow:0 6px 20px -10px #000}
+.vbar b{flex:1;font-family:"Secular One",Rubik;font-size:20px;text-align:center}
+.vbar button{width:44px;height:44px;border-radius:12px;border:0;background:rgba(255,255,255,.12);color:#fff;cursor:pointer;display:grid;place-items:center;font-size:22px}
+.view section{padding-top:20px}
+.view section > h2{display:none}
 
 section{padding:46px 0 10px}
 h2{font-family:"Secular One",Rubik,sans-serif;font-size:clamp(26px,4.4vw,36px);margin:0 0 6px;line-height:1.15}
@@ -200,7 +218,7 @@ table.prices small{color:var(--muted)}
 .rules{padding:0;margin:0}
 
 /* ---------- SUPPORT ---------- */
-.support{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.support{display:grid;grid-template-columns:1fr;gap:14px;max-width:560px}
 @media (max-width:700px){.support{grid-template-columns:1fr}}
 .tile{position:relative;border-radius:22px;overflow:hidden;min-height:260px;color:#fff;display:flex;flex-direction:column;justify-content:flex-end;padding:22px;isolation:isolate;text-decoration:none}
 .tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}
@@ -219,13 +237,32 @@ dialog h3{margin:0 0 4px;font-size:22px}
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(150%);background:var(--teal-d);color:#fff;padding:12px 18px;border-radius:14px;z-index:50;transition:transform .3s,visibility .3s;max-width:92vw;box-shadow:var(--shadow);visibility:hidden}
 .toast.show{transform:translateX(-50%) translateY(0);visibility:visible}
 #install{display:none}
+#formBody[hidden]{display:none}
+.kind-hint{text-align:center;color:var(--muted);margin:14px 0 0;font-size:15px}
+#signDlg{max-width:min(560px,94vw)}
+#signDlg .waiver{margin-top:0;border:0;padding:0;background:transparent}
+.sum{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:10px 14px;font-size:14px;margin:0 0 12px}
 .spinner{display:inline-block;width:18px;height:18px;border:2px solid #fff6;border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
 </style>
 </head>
 <body>
 
+<button class="burger" id="burger" type="button" aria-label="תפריט"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+<dialog class="drawer" id="menu" aria-label="תפריט">
+  <div class="top"><img src="img/logo.png" alt=""><b>צוות עכביש שוקדה</b></div>
+  <nav>
+    <a href="#home"><span>🏠</span>דף הבית</a>
+    <a href="#calendar"><span>📅</span>מה תפוס? לוח אירועים</a>
+    <a href="#book"><span>➕</span>להשתבץ לאירוע</a>
+    <a href="#edit"><span>✏️</span>עריכה / ביטול שיבוץ</a>
+    <a href="#prices"><span>💰</span>מחירון</a>
+    <a href="#rules"><span>📜</span>תקנון</a>
+    <a href="#support"><span>❤️</span>תרומה למיזם</a>
+  </nav>
+</dialog>
+
 <!-- ============ HERO ============ -->
-<header class="hero">
+<header class="hero" id="home">
   <svg class="web" viewBox="0 0 1000 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true" id="websvg"></svg>
   <div>
     <div class="spider"><img src="img/spider-white.png" alt="העכביש של צוות עכביש" width="274" height="462"></div>
@@ -236,23 +273,11 @@ dialog h3{margin:0 0 4px;font-size:22px}
       <a href="#book"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4M12 13v5M9.5 15.5h5"/></svg>להשתבץ לאירוע</a>
       <a href="#calendar"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>מה תפוס?</a>
       <a href="#" id="heroDonate" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>לתרום למיזם</a>
-      <a href="#" id="heroPhotos" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>להעלות תמונות</a>
+      <a href="#edit"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></svg>עריכה/ביטול שיבוץ</a>
     </nav>
     <div class="cta" style="margin-top:14px"><button class="btn btn-ghost" id="install" type="button">התקנה לטלפון</button></div>
   </div>
 </header>
-
-<nav class="tabs" aria-label="ניווט">
-  <div class="wrap">
-    <img class="mini" src="img/logo.png" alt="">
-    <a href="#calendar">לוח אירועים</a>
-    <a href="#book">שיבוץ</a>
-    <a href="#edit">עריכה</a>
-    <a href="#prices">מחירון</a>
-    <a href="#rules">תקנון</a>
-    <a href="#support">תרומה ותמונות</a>
-  </div>
-</nav>
 
 <main class="wrap">
   <div class="strip">
@@ -297,15 +322,18 @@ dialog h3{margin:0 0 4px;font-size:22px}
   </section>
 
   <!-- ============ BOOKING ============ -->
+  <div class="view" id="v-book" hidden><div class="vbar"><button type="button" class="back" aria-label="חזרה">→</button><b>שיבוץ לאירוע</b><button type="button" class="vmenu" aria-label="תפריט"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div><div class="wrap">
   <section id="book">
     <h2>שיבוץ לאירוע</h2>
     <p class="sub">אירוע רשמי לפי סעיף 4 בתקנון הוא ללא עלות (אפשר לתרום למיזם). אירוע פרטי בתשלום לפי המחירון. כבר נרשמתם? <a href="#edit">לשינוי או ביטול שיבוץ</a></p>
     <form class="card" id="form" novalidate>
       <label>סוג האירוע</label>
       <div class="kind">
-        <label><input type="radio" name="kind" value="official" checked><b>אירוע רשמי</b><small>בר/בת מצווה, שבת חתן, חתונה, אירוסין, ברית, בריתה, חאלקה. ללא עלות</small></label>
+        <label><input type="radio" name="kind" value="official"><b>אירוע רשמי</b><small>בר/בת מצווה, שבת חתן, חתונה, אירוסין, ברית, בריתה, חאלקה. ללא עלות</small></label>
         <label class="p"><input type="radio" name="kind" value="private"><b>אירוע פרטי</b><small>יום הולדת, סעודת הודיה ועוד. לפי המחירון</small></label>
       </div>
+      <p class="kind-hint" id="kindHint">בחרו סוג אירוע כדי להמשיך</p>
+      <div id="formBody" hidden>
       <div class="row">
         <div><label for="type">מה חוגגים?</label><select id="type" name="type" required></select></div>
         <div><label for="date">תאריך</label><input type="date" id="date" name="date" required><small id="hebDate" style="color:var(--muted);font-size:13px"></small></div>
@@ -332,25 +360,18 @@ dialog h3{margin:0 0 4px;font-size:22px}
       <label for="notes">הערות</label>
       <textarea id="notes" name="notes" rows="2" placeholder="שעת איסוף, עזרה בהקמה, כל דבר שחשוב לדעת"></textarea>
 
-      <div class="waiver">
-        <h3>כתב ויתור וחתימה דיגיטלית</h3>
-        <p id="waiverText"></p>
-        <div class="sigbox"><canvas id="sig" aria-label="משטח חתימה"></canvas><div class="base"></div><div class="ph" id="sigPh">חתמו כאן באצבע או בעכבר</div><button type="button" id="sigClear">ניקוי</button></div>
-        <div class="row">
-          <div><label for="signer">שם מלא של החותם/ת</label><input id="signer" required autocomplete="name"></div>
-          <div><label>תאריך חתימה</label><input id="signDate" disabled></div>
-        </div>
-        <label class="check"><input type="checkbox" id="agree" required> <span>קראתי ואני מסכים/ה לתקנון ולכתב הוויתור. החתימה שלי מחייבת.</span></label>
-      </div>
 
       <div class="msg" id="formMsg"></div>
       <div class="cta" style="justify-content:flex-start;margin-top:18px">
-        <button class="btn btn-primary" type="submit" id="submitBtn">שליחת שיבוץ</button>
+        <button class="btn btn-primary" type="submit" id="nextBtn">המשך לחתימה ←</button>
+      </div>
       </div>
     </form>
   </section>
+  </div></div>
 
   <!-- ============ EDIT ============ -->
+  <div class="view" id="v-edit" hidden><div class="vbar"><button type="button" class="back" aria-label="חזרה">→</button><b>עריכה / ביטול שיבוץ</b><button type="button" class="vmenu" aria-label="תפריט"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div><div class="wrap">
   <section id="edit">
     <h2>שינוי או ביטול שיבוץ</h2>
     <p class="sub">הזינו את מספר הטלפון שאיתו נרשמתם, ותראו את השיבוצים הקרובים שלכם. אפשר לשנות תאריך, מיקום וציוד, או לבטל.</p>
@@ -383,15 +404,19 @@ dialog h3{margin:0 0 4px;font-size:22px}
       </form>
     </div>
   </section>
+  </div></div>
 
   <!-- ============ PRICES ============ -->
+  <div class="view" id="v-prices" hidden><div class="vbar"><button type="button" class="back" aria-label="חזרה">→</button><b>מחירון</b><button type="button" class="vmenu" aria-label="תפריט"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div><div class="wrap">
   <section id="prices">
     <h2>מחירון ציוד עכביש</h2>
     <p class="sub">לאירועים פרטיים (סעיף 5). המחירים בשקלים.</p>
     <div class="card"><table class="prices" id="priceTable"><thead><tr><th>ציוד</th><th>מחיר</th><th>תנאים</th></tr></thead><tbody></tbody></table></div>
   </section>
+  </div></div>
 
   <!-- ============ RULES ============ -->
+  <div class="view" id="v-rules" hidden><div class="vbar"><button type="button" class="back" aria-label="חזרה">→</button><b>תקנון</b><button type="button" class="vmenu" aria-label="תפריט"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div><div class="wrap">
   <section id="rules">
     <h2>התקנון בקצרה</h2>
     <p class="sub">עיקרי הדברים. הנוסח המלא נמצא אצל הצוות.</p>
@@ -405,10 +430,11 @@ dialog h3{margin:0 0 4px;font-size:22px}
       <li><b>אין שיבוץ יום אחרי יום:</b> תאריך צמוד לאירוע קיים דורש בקשה מיוחדת ואישור מנהל המערכת.</li>
     </ul>
   </section>
+  </div></div>
 
   <!-- ============ SUPPORT ============ -->
   <section id="support">
-    <h2>תרומה ותמונות</h2>
+    <h2>תרומה למיזם</h2>
     <p class="sub">הציוד קיים בזכות המתנדבים והתרומות שלכם.</p>
     <div class="support">
       <a class="tile" id="payboxTile" href="#" target="_blank" rel="noopener">
@@ -416,12 +442,6 @@ dialog h3{margin:0 0 4px;font-size:22px}
         <h3>תרומה למיזם</h3>
         <p>כל שקל הולך לתיקון ציוד וקניית ציוד חדש לקהילה.</p>
         <span class="btn btn-plum">לתרומה בפייבוקס</span>
-      </a>
-      <a class="tile" id="photosTile" href="#" target="_blank" rel="noopener">
-        <img src="img/shirt.jpg" alt="חולצת צוות עכביש" loading="lazy">
-        <h3>שתפו תמונות מהאירוע</h3>
-        <p>שלחו לנו תמונות של השולחנות, התאורה והשמחה. נשמח לראות!</p>
-        <span class="btn btn-primary">להעלאת תמונות</span>
       </a>
     </div>
   </section>
@@ -434,6 +454,24 @@ dialog h3{margin:0 0 4px;font-size:22px}
 </footer>
 
 <dialog id="dlg"><div class="in" id="dlgBody"></div><div class="in" style="padding-top:0"><button class="btn btn-outline" onclick="dlg.close()">סגירה</button></div></dialog>
+<dialog id="signDlg"><div class="in">
+  <div class="sum" id="signSum"></div>
+  <div class="waiver">
+    <h3>כתב ויתור וחתימה דיגיטלית</h3>
+    <p id="waiverText"></p>
+    <div class="sigbox"><canvas id="sig" aria-label="משטח חתימה"></canvas><div class="base"></div><div class="ph" id="sigPh">חתמו כאן באצבע או בעכבר</div><button type="button" id="sigClear">ניקוי</button></div>
+    <div class="row">
+      <div><label for="signer">שם מלא של החותם/ת</label><input id="signer" required autocomplete="name"></div>
+      <div><label>תאריך חתימה</label><input id="signDate" disabled></div>
+    </div>
+    <label class="check"><input type="checkbox" id="agree" required> <span>קראתי ואני מסכים/ה לתקנון ולכתב הוויתור. החתימה שלי מחייבת.</span></label>
+  </div>
+  <div class="msg" id="signMsg"></div>
+  <div class="cta" style="justify-content:space-between;margin-top:16px">
+    <button class="btn btn-primary" type="button" id="submitBtn">שליחת שיבוץ</button>
+    <button class="btn btn-outline" type="button" onclick="signDlg.close()">חזרה לטופס</button>
+  </div>
+</div></dialog>
 <div class="toast" id="toast"></div>
 
 <script src="config.js?v=4"></script>
@@ -482,6 +520,7 @@ const real = () => active().filter(e => !isAkavishot(e));
 const byDate = () => { const m = {}; real().forEach(e => (m[e.date] ||= []).push(e)); return m; };
 const akByDate = () => { const m = {}; active().filter(isAkavishot).forEach(e => (m[e.date] ||= []).push(e)); return m; };
 const akNote = list => list && list.length ? `<div class="akinfo">🎀 <b>עכבישות:</b> ${esc(list.map(e => e.family || "ציוד").join(", "))}. לידיעת צוות עכבישות בלבד, לא חוסם שיבוץ.</div>` : "";
+const kindVal = () => (document.querySelector("input[name=kind]:checked") || { value: "official" }).value;
 const toast = t => { const el = $("#toast"); el.textContent = t; el.classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove("show"), 3500); };
 
 // ---------- data ----------
@@ -572,7 +611,7 @@ function showDay(s) {
   $("#dlgBody").innerHTML = body;
   $("#dlg").showModal();
 }
-window.__pick = s => { $("#dlg").close(); $("#date").value = s; onDate(); location.hash = ""; $("#book").scrollIntoView(); };
+window.__pick = s => { $("#dlg").close(); $("#date").value = s; onDate(); go("book"); };
 
 // ---------- list + stats ----------
 let filter = "up";
@@ -593,7 +632,7 @@ function render() { renderCal(); renderList(); }
 
 // ---------- form ----------
 function fillTypes() {
-  const k = document.querySelector("input[name=kind]:checked").value;
+  const k = kindVal();
   const arr = k === "official" ? C.OFFICIAL_TYPES : C.PRIVATE_TYPES;
   $("#type").innerHTML = `<option value="">בחרו…</option>` + arr.map(t => `<option>${esc(t)}</option>`).join("");
   $("#totalLabel").textContent = k === "official" ? "עלות" : "סה״כ לתשלום";
@@ -611,7 +650,7 @@ function equipment() {
   return C.PRICES.map(p => ({ ...p, qty: Math.max(0, parseInt($("#q_"+p.id).value) || 0) })).filter(p => p.qty > 0);
 }
 function calcTotal() {
-  const k = document.querySelector("input[name=kind]:checked").value;
+  const k = kindVal();
   const sum = equipment().reduce((s,p) => s + p.qty * p.price, 0);
   $("#total").textContent = k === "official" ? "ללא עלות" : sum + " ₪";
   return k === "official" ? 0 : sum;
@@ -658,10 +697,8 @@ function signaturePng() {
 }
 
 // ---------- submit ----------
-$("#form").addEventListener("submit", async ev => {
-  ev.preventDefault();
-  const m = $("#formMsg"); clearMsg(m);
-  const kind = document.querySelector("input[name=kind]:checked").value;
+function formData() {
+  const kind = kindVal();
   const data = {
     action: "book", kind, date: $("#date").value, type: $("#type").value,
     family: $("#family").value.trim(), phone: $("#phone").value.trim(), location: $("#location").value.trim(),
@@ -669,20 +706,38 @@ $("#form").addEventListener("submit", async ev => {
     total: calcTotal(), special: $("#special").checked, specialReason: $("#specialWhy").value.trim(),
     signer: $("#signer").value.trim(), waiver: C.WAIVER_TEXT, signedAt: new Date().toISOString(),
   };
+  return data;
+}
+// שלב 1: הטופס. אם הכול תקין, קופץ חלון כתב הוויתור והחתימה
+$("#form").addEventListener("submit", ev => {
+  ev.preventDefault();
+  const m = $("#formMsg"); clearMsg(m);
+  const data = formData();
   const errs = [];
   if (!data.type) errs.push("סוג האירוע");
   if (!data.date) errs.push("תאריך");
   if (!data.family) errs.push("שם משפחה");
   if (!/^[\d\s+\-]{9,}$/.test(data.phone)) errs.push("טלפון תקין");
   if (!data.location) errs.push("מיקום במושב");
-  if (!data.signer) errs.push("שם החותם/ת");
-  if (!signed) errs.push("חתימה");
-  if (!$("#agree").checked) errs.push("אישור כתב הוויתור");
   if (errs.length) return setMsg(m, "err", "חסר: " + errs.join(", "));
   if (data.date < todayIso) return setMsg(m, "err", "התאריך כבר עבר.");
   const st = check(data.date);
   if (st.level === "taken") return setMsg(m, "err", "התאריך תפוס. בחרו תאריך אחר.");
   if (st.level === "adjacent" && !data.special) return setMsg(m, "err", "התאריך צמוד לאירוע אחר. סמנו בקשה מיוחדת לאישור מנהל, או בחרו תאריך אחר.");
+  const d = parse(data.date);
+  $("#signSum").innerHTML = `<b>${esc(data.family)}</b> · ${esc(data.type)}<br>יום ${DAYNAME[d.getDay()]}, ${d.getDate()}.${d.getMonth()+1}.${d.getFullYear()} · 📍 ${esc(data.location)}<br>${data.kind === "private" ? "לתשלום: " + data.total + " ₪" : "ללא עלות"}`;
+  clearMsg($("#signMsg"));
+  $("#signDlg").showModal(); requestAnimationFrame(sizeCanvas);
+});
+// שלב 2: חתימה ושליחה
+$("#submitBtn").addEventListener("click", async () => {
+  const m = $("#signMsg"); clearMsg(m);
+  const data = formData(), kind = data.kind;
+  const errs = [];
+  if (!data.signer) errs.push("שם החותם/ת");
+  if (!signed) errs.push("חתימה");
+  if (!$("#agree").checked) errs.push("אישור כתב הוויתור");
+  if (errs.length) return setMsg(m, "err", "חסר: " + errs.join(", "));
   data.signature = signaturePng();
 
   const btn = $("#submitBtn"); btn.disabled = true; btn.innerHTML = `<span class="spinner"></span> שולח…`;
@@ -699,14 +754,15 @@ $("#form").addEventListener("submit", async ev => {
     }
     if (!res.ok) throw new Error(res.error || "השיבוץ לא נקלט");
     const pend = /ממתין/.test(res.status);
-    $("#form").reset(); $("#sigClear").click(); fillTypes(); onDate(); $("#signDate").value = new Date().toLocaleDateString("he-IL");
+    $("#signDlg").close();
+    $("#form").reset(); $("#signer").value = ""; $("#agree").checked = false; $("#sigClear").click(); fillTypes(); onDate(); $("#signDate").value = new Date().toLocaleDateString("he-IL");
     await load();
     $("#dlgBody").innerHTML = `<h3>${pend ? "הבקשה נשלחה למנהל" : "נרשמתם! 🕷️"}</h3>
       <p>${pend ? "הבקשה המיוחדת ממתינה לאישור מנהל המערכת. נחזור אליכם בטלפון." : "השיבוץ נקלט בלוח האירועים. צוות עכביש יצור קשר לתיאום האיסוף."}</p>
       <div class="mazal" style="margin:0 0 14px">${mazalHtml}</div>
       ${kind === "private" && data.total ? `<p>לתשלום: <b>${data.total} ₪</b> בפייבוקס של יו״ר הגמ״ח.</p>` : ""}
       ${C.PAYBOX_URL ? `<a class="btn btn-plum" href="${esc(C.PAYBOX_URL)}" target="_blank" rel="noopener">${kind === "private" ? "לתשלום בפייבוקס" : "לתרומה בפייבוקס"}</a>` : ""}
-      <p class="sub" style="margin-top:12px">צריך לשנות תאריך, מיקום או ציוד? בקטע <b>שינוי או ביטול שיבוץ</b> מזינים את הטלפון ${esc(data.phone)}.</p>
+      <p class="sub" style="margin-top:12px">צריך לשנות תאריך, מיקום או ציוד? בתפריט ← <b>עריכה / ביטול שיבוץ</b> מזינים את הטלפון ${esc(data.phone)}.</p>
       ${res.demo ? `<p class="sub" style="margin-top:12px">מצב הדגמה: השיבוץ נשמר רק במכשיר הזה.</p>` : ""}`;
     $("#dlg").showModal();
   } catch (e) {
@@ -840,9 +896,7 @@ function wireLink(id, url, missing) {
   else a.addEventListener("click", e => { e.preventDefault(); toast(missing); });
 }
 wireLink("#payboxTile", C.PAYBOX_URL, "קישור הפייבוקס עוד לא הוגדר");
-wireLink("#photosTile", C.PHOTOS_URL, "קישור העלאת התמונות עוד לא הוגדר");
 wireLink("#heroDonate", C.PAYBOX_URL, "קישור הפייבוקס עוד לא הוגדר");
-wireLink("#heroPhotos", C.PHOTOS_URL, "קישור העלאת התמונות עוד לא הוגדר");
 if (C.ADMIN_WHATSAPP) $("#adminLink").innerHTML = `<a href="https://wa.me/${encodeURIComponent(C.ADMIN_WHATSAPP)}" target="_blank" rel="noopener">שאלות? וואטסאפ למנהל</a>`;
 
 // ---------- web background ----------
@@ -863,6 +917,40 @@ $("#mazal").innerHTML = mazalHtml;
 $("#signDate").value = new Date().toLocaleDateString("he-IL");
 renderEquip(); fillTypes();
 document.querySelectorAll("input[name=kind]").forEach(r => r.addEventListener("change", fillTypes));
+function syncKind() { const on = !!document.querySelector("input[name=kind]:checked"); $("#formBody").hidden = !on; $("#kindHint").hidden = on; }
+document.querySelectorAll("input[name=kind]").forEach(r => r.addEventListener("change", syncKind));
+$("#form").addEventListener("reset", () => setTimeout(syncKind));
+syncKind();
+
+// ---------- app-style screens + menu ----------
+const VIEWS = ["book", "edit", "prices", "rules"];
+let homeScroll = 0;
+function route() {
+  const h = decodeURIComponent(location.hash.slice(1));
+  const open = VIEWS.includes(h) ? h : null;
+  const was = document.body.classList.contains("has-view");
+  if (open && !was) homeScroll = scrollY;
+  VIEWS.forEach(v => { const el = $("#v-" + v); const show = v === open; if (show && el.hidden) el.scrollTop = 0; el.hidden = !show; });
+  document.body.classList.toggle("has-view", !!open);
+  if (open) { if (open === "book") requestAnimationFrame(sizeCanvas); return; }
+  if (was) scrollTo(0, homeScroll);
+  if (h && h !== "home") { const t = document.getElementById(h); if (t) requestAnimationFrame(() => t.scrollIntoView({ behavior: was ? "instant" : "smooth" })); }
+  else if (h === "home") scrollTo({ top: 0, behavior: "smooth" });
+}
+function go(v) { if (location.hash === "#" + v) route(); else location.hash = v; }
+window.addEventListener("hashchange", route);
+let inApp = false; window.addEventListener("hashchange", () => inApp = true);
+document.querySelectorAll(".view .back").forEach(b => b.onclick = () => { if (inApp) history.back(); else location.hash = "home"; });
+const openMenu = () => $("#menu").showModal();
+$("#burger").onclick = openMenu;
+document.querySelectorAll(".vmenu").forEach(b => b.onclick = openMenu);
+$("#menu").addEventListener("click", e => {
+  if (e.target.id === "menu") return $("#menu").close();
+  const a = e.target.closest("a"); if (!a) return;
+  e.preventDefault(); $("#menu").close(); document.activeElement && document.activeElement.blur();
+  setTimeout(() => go(a.getAttribute("href").slice(1)), 30);
+});
+route();
 $("#equip").addEventListener("click", e => { const b = e.target.closest("button[data-s]"); if (!b) return; const i = $("#q_"+b.dataset.id); i.value = Math.max(0, (parseInt(i.value)||0) + Number(b.dataset.s)); calcTotal(); });
 $("#equip").addEventListener("input", calcTotal);
 $("#date").min = todayIso;
