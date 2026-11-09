@@ -1,5 +1,5 @@
 // Service worker: האתר נפתח גם בלי אינטרנט. נתוני הלוח נשמרים בדפדפן (localStorage) מהטעינה האחרונה.
-const CACHE = "akavish-v6";
+const CACHE = "akavish-v7";
 const SHELL = ["./", "index.html", "config.js", "sample-data.js", "manifest.webmanifest",
   "img/logo.png", "img/spider-white.png", "img/hero.jpg", "img/trailer.jpg", "img/shirt.jpg", "img/icon-192.png", "img/icon-512.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())); });
