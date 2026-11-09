@@ -258,6 +258,7 @@ dialog h3{margin:0 0 4px;font-size:22px}
     <a href="#prices"><span>💰</span>מחירון</a>
     <a href="#rules"><span>📜</span>תקנון</a>
     <a href="#support"><span>❤️</span>תרומה למיזם</a>
+    <a href="about.html" data-ext><span>🕷️</span>עלינו</a>
   </nav>
 </dialog>
 
@@ -450,6 +451,7 @@ dialog h3{margin:0 0 4px;font-size:22px}
 <footer>
   <img src="img/logo.png" alt="">
   <div>צוות עכביש שוקדה · מיזם התנדבותי של מושב שוקדה</div>
+  <div style="margin-top:10px"><a class="btn btn-outline" href="about.html">עלינו: צוות עכביש במספרים</a></div>
   <div id="adminLink" style="margin-top:6px"></div>
 </footer>
 
@@ -947,6 +949,7 @@ document.querySelectorAll(".vmenu").forEach(b => b.onclick = openMenu);
 $("#menu").addEventListener("click", e => {
   if (e.target.id === "menu") return $("#menu").close();
   const a = e.target.closest("a"); if (!a) return;
+  if (a.hasAttribute("data-ext")) return;
   e.preventDefault(); $("#menu").close(); document.activeElement && document.activeElement.blur();
   setTimeout(() => go(a.getAttribute("href").slice(1)), 30);
 });
